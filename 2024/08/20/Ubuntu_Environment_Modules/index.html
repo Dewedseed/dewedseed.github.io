@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="Environment Modules 是一种简化的 Shell 初始化工具，可用于修改终端环境。">
 <meta property="og:type" content="article">
@@ -81,6 +81,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -88,12 +89,38 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">4</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">1</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">5</span></a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">5</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">1</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">6</span></a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </header>
         
@@ -113,7 +140,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%A8%A1%E5%9D%97%E8%B7%AF%E5%BE%84%E5%8F%8A%E6%A8%A1%E5%9D%97"><span class="nav-number">2.2.</span> <span class="nav-text">添加模块路径及模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E9%BB%98%E8%AE%A4%E6%A8%A1%E5%9D%97"><span class="nav-number">2.3.</span> <span class="nav-text">定义默认模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99-Modulefile"><span class="nav-number">3.</span> <span class="nav-text">编写 Modulefile</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.1.</span> <span class="nav-text">脚本转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">3.2.</span> <span class="nav-text">关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD"><span class="nav-number">3.3.</span> <span class="nav-text">高级功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">常用指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text"> 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text"> 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text"> 初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%A8%A1%E5%9D%97%E8%B7%AF%E5%BE%84%E5%8F%8A%E6%A8%A1%E5%9D%97"><span class="nav-number">2.2.</span> <span class="nav-text"> 添加模块路径及模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E9%BB%98%E8%AE%A4%E6%A8%A1%E5%9D%97"><span class="nav-number">2.3.</span> <span class="nav-text"> 定义默认模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99-modulefile"><span class="nav-number">3.</span> <span class="nav-text"> 编写 Modulefile</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.1.</span> <span class="nav-text"> 脚本转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">3.2.</span> <span class="nav-text"> 关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD"><span class="nav-number">3.3.</span> <span class="nav-text"> 高级功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text"> 常用指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text"> 参考</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -128,7 +155,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -139,7 +166,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -239,49 +266,44 @@
     
     <div class="post-body" itemprop="articleBody"><p>Environment Modules 是一种简化的 Shell 初始化工具，可用于修改终端环境。</p>
 <span id="more"></span>
-
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>依赖 <code>Tcl 版本 &gt;= 8.5</code>，查看 Tcl 版本：</p>
+<h2 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h2>
+<p>依赖 <code>Tcl 版本 &gt;= 8.5</code>，查看 Tcl 版本：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> puts \<span class="variable">$tcl_version</span> | tclsh</span><br></pre></td></tr></table></figure>
-
 <p>依赖 Tcl 配置脚本 <code>tclConfig.sh</code></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whereis tclConfig.sh</span><br></pre></td></tr></table></figure>
-
-<p>安装 tcl 工具，并通过 <code>--with-tcl</code> 指定 tclConfig.sh 文件所在路径</p>
+<p>安装 tcl 工具，并通过 <code>--with-tcl</code> 指定 <a target="_blank" rel="noopener" href="http://tclConfig.sh">tclConfig.sh</a> 文件所在路径</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt -y install tcl-dev</span><br></pre></td></tr></table></figure>
-
 <p>下载安装包（此处需关闭代理）</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -LJO https://github.com/cea-hpc/modules/releases/download/v5.4.0/modules-5.4.0.tar.gz</span><br><span class="line">tar xfz modules-5.4.0.tar.gz</span><br></pre></td></tr></table></figure>
-
 <p>默认安装路径为 <code>--prefix=/usr/local/Modules</code>，此处安装至 <code>/opt/tools/Modules/build</code> 路径下，modulefile文件默认路径为 <code>--modulefilesdir=/usr/local/Modules/modulefiles</code> ，此处设置为 <code>/opt/tools/Modules/modulefiles</code></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/opt/tools/Modules/build --modulefilesdir=/opt/tools/Modules/modulefiles --with-tcl=/usr/lib</span><br></pre></td></tr></table></figure>
-
 <p>编译并安装</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><ol>
+<h2 id="配置"><a class="markdownIt-Anchor" href="#配置"></a> 配置</h2>
+<h3 id="初始化"><a class="markdownIt-Anchor" href="#初始化"></a> 初始化</h3>
+<ol>
 <li>全局初始化，将 profile 文件添加至 <code>/etc/profile.d</code> 中</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /opt/tools/Modules/build/init/profile.sh /etc/profile.d/modules.sh</span><br><span class="line"><span class="built_in">ln</span> -s /opt/tools/Modules/build/init/profile.csh /etc/profile.d/modules.csh</span><br></pre></td></tr></table></figure>
-
 <ol start="2">
 <li>单用户初始化，添加至 <code>~/.bashrc</code> 中</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /opt/tools/Modules/build/init/bash</span><br></pre></td></tr></table></figure>
-
 <ol start="3">
 <li>验证初始化完成 <code>module -V</code></li>
 </ol>
-<h3 id="添加模块路径及模块"><a href="#添加模块路径及模块" class="headerlink" title="添加模块路径及模块"></a>添加模块路径及模块</h3><ol>
-<li><p>通过 <code>./config --etcdir</code> 选项指定路径下的 <code>initrc</code> 文件定义 <code>module paths</code> <code>modulefiles</code> 等，文件默认路径为 <code>PREFIX/etc</code></p>
+<h3 id="添加模块路径及模块"><a class="markdownIt-Anchor" href="#添加模块路径及模块"></a> 添加模块路径及模块</h3>
+<ol>
+<li>
+<p>通过 <code>./config --etcdir</code> 选项指定路径下的 <code>initrc</code> 文件定义 <code>module paths</code> <code>modulefiles</code> 等，文件默认路径为 <code>PREFIX/etc</code></p>
 </li>
-<li><p>定义 <code>module paths to enable by default</code>，<code>initrc</code> 文件中已添加 <code>./config --modulefilesdir</code> 定义的路径 <code>module use --append &#123;PREFIX/modulefiles&#125;</code>，此处在<code>initrc</code> 文件中添加自定义路径 <code>/opt/tools/Modules/Compiler</code></p>
+<li>
+<p>定义 <code>module paths to enable by default</code>，<code>initrc</code> 文件中已添加 <code>./config --modulefilesdir</code> 定义的路径 <code>module use --append &#123;PREFIX/modulefiles&#125;</code>，此处在<code>initrc</code> 文件中添加自定义路径 <code>/opt/tools/Modules/Compiler</code></p>
 </li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># compiler modulepath</span></span><br><span class="line">module use --append &#123;/opt/tools/Modules/Compiler&#125;</span><br></pre></td></tr></table></figure>
-
 <p>执行 <code>echo $MODULEPATH</code>，显示模块路径</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/tools/Modules/modulefiles:/opt/tools/Modules/Compiler</span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>模块路径也可通过 <code>modulespath</code> 文件定义，且优先级高于 <code>initrc</code> 文件；添加时直接写入文件路径即可 <code>/path/to/other/modulefiles</code></p>
 </blockquote>
@@ -289,167 +311,170 @@
 <li>在自定义路径  <code>/opt/tools/Modules/Compiler</code> 下添加文件 <code>gcc/11.3.2</code> 及 <code>gcc/13.2.0</code>，文件内首行输入 <code>#%Module</code>，工具会自动将文件识别为 <code>modulefile</code>，执行 <code>module avail</code> 可显示已识别的模块路径及模块</li>
 </ol>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">------------ /opt/tools/Modules/Compiler ------------</span><br><span class="line">gcc/11.3.2  gcc/13.2.0</span><br></pre></td></tr></table></figure>
-
-<h3 id="定义默认模块"><a href="#定义默认模块" class="headerlink" title="定义默认模块"></a>定义默认模块</h3><ol>
+<h3 id="定义默认模块"><a class="markdownIt-Anchor" href="#定义默认模块"></a> 定义默认模块</h3>
+<ol>
 <li>在 <code>initrc</code> 文件中定义默认导入模块</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> &#123;[is-saved default]&#125; &#123;</span><br><span class="line">    module restore</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    module load &#123;gcc/13.2.0&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>在打开新终端时会自动导入该模块 <code>Loading gcc/13.2.0</code></p>
 <ol start="2">
 <li>在 <code>.modulerc</code> 文件中定义默认版本，首先在 <code>gcc/11.3.2</code> 中定义版本变量</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"><span class="built_in">set</span> ModulesVersion 11.3.2</span><br></pre></td></tr></table></figure>
-
 <p>对应需要定义默认版本程序的文件夹下添加文件 <code>gcc/.modulerc</code>，定义默认版本</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line">module-version ./11.3.2 default</span><br></pre></td></tr></table></figure>
-
 <p>执行 <code>ml load gcc &amp;&amp; ml list</code> 会导入默认版本模块</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Currently Loaded Modulefiles:</span><br><span class="line"> 1) gcc/11.3.2</span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>默认版本也可以通过 <code>.version</code> 文件定义</p>
 </blockquote>
-<h2 id="编写-Modulefile"><a href="#编写-Modulefile" class="headerlink" title="编写 Modulefile"></a>编写 Modulefile</h2><h3 id="脚本转换"><a href="#脚本转换" class="headerlink" title="脚本转换"></a>脚本转换</h3><p>Modulefile 通过 <code>Tcl</code> 语言编写，可通过命令 <code>sh-to-mod</code> 将 shell 脚本转换为 modulefile 格式</p>
+<h2 id="编写-modulefile"><a class="markdownIt-Anchor" href="#编写-modulefile"></a> 编写 Modulefile</h2>
+<h3 id="脚本转换"><a class="markdownIt-Anchor" href="#脚本转换"></a> 脚本转换</h3>
+<p>Modulefile 通过 <code>Tcl</code> 语言编写，可通过命令 <code>sh-to-mod</code> 将 shell 脚本转换为 modulefile 格式</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh-to-mod shell shellscript [arg...]</span><br></pre></td></tr></table></figure>
-
 <p>例如，<code>bash</code> 脚本 <code>gcc_13.2.0.sh</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">version=<span class="string">&quot;13.2.0&quot;</span></span><br><span class="line">prefix=<span class="string">&quot;/opt/compiler/gcc/13.2.0&quot;</span></span><br><span class="line"><span class="built_in">alias</span> gcc=<span class="string">&quot;gcc-13&quot;</span></span><br><span class="line"><span class="built_in">export</span> GCC_HOME=<span class="string">&quot;<span class="variable">$prefix</span>&quot;</span></span><br><span class="line"><span class="built_in">export</span> GCC_INCLUDE=<span class="string">&quot;<span class="variable">$prefix</span>/include&quot;</span></span><br><span class="line"><span class="built_in">export</span> GCC_LIB=<span class="string">&quot;<span class="variable">$prefix</span>/lib&quot;</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="variable">$prefix</span>/bin:<span class="variable">$PATH</span>&quot;</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-
 <p>通过 <code>module sh-to-mod bash gcc_13.2.0.sh</code> 转换脚本</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line">prepend-path    PATH /opt/compiler/gcc/13.2.0/bin</span><br><span class="line">set-alias       gcc gcc-13</span><br><span class="line">setenv          GCC_HOME /opt/compiler/gcc/13.2.0</span><br><span class="line">setenv          GCC_INCLUDE /opt/compiler/gcc/13.2.0/include</span><br><span class="line">setenv          GCC_LIB /opt/compiler/gcc/13.2.0/lib</span><br></pre></td></tr></table></figure>
-
-<h3 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h3><p>常见关键字如下</p>
+<h3 id="关键字"><a class="markdownIt-Anchor" href="#关键字"></a> 关键字</h3>
+<p>常见关键字如下</p>
 <table>
 <thead>
 <tr>
-<th align="left">关键字</th>
-<th align="left">作用</th>
+<th style="text-align:left">关键字</th>
+<th style="text-align:left">作用</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left">set</td>
-<td align="left">设置局部变量</td>
+<tbody>
+<tr>
+<td style="text-align:left">set</td>
+<td style="text-align:left">设置局部变量</td>
 </tr>
 <tr>
-<td align="left">set-alias name string</td>
-<td align="left">设置指令的别名</td>
+<td style="text-align:left">set-alias name string</td>
+<td style="text-align:left">设置指令的别名</td>
 </tr>
 <tr>
-<td align="left">setenv variable value</td>
-<td align="left">设置环境变量值</td>
+<td style="text-align:left">setenv variable value</td>
+<td style="text-align:left">设置环境变量值</td>
 </tr>
 <tr>
-<td align="left">prepend-path variable value</td>
-<td align="left">添加或预置 value 至 variable</td>
+<td style="text-align:left">prepend-path variable value</td>
+<td style="text-align:left">添加或预置 value 至 variable</td>
 </tr>
 <tr>
-<td align="left">module-whatis string</td>
-<td align="left">用于 <code>module whatis</code> 显示信息</td>
+<td style="text-align:left">module-whatis string</td>
+<td style="text-align:left">用于 <code>module whatis</code> 显示信息</td>
 </tr>
 <tr>
-<td align="left">conflict modulefile</td>
-<td align="left">列出与当前模块冲突的模块文件列表</td>
+<td style="text-align:left">conflict modulefile</td>
+<td style="text-align:left">列出与当前模块冲突的模块文件列表</td>
 </tr>
 <tr>
-<td align="left">prereq-all [options] modulefile</td>
-<td align="left">声明当前加载模块的依赖模块文件列表</td>
+<td style="text-align:left">prereq-all [options] modulefile</td>
+<td style="text-align:left">声明当前加载模块的依赖模块文件列表</td>
 </tr>
 <tr>
-<td align="left">module-alias name modulefile</td>
-<td align="left">设置模块文件的别名</td>
+<td style="text-align:left">module-alias name modulefile</td>
+<td style="text-align:left">设置模块文件的别名</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>对于 <code>bash</code> 脚本 <code>gcc_13.2.0.sh</code>，编写对应 <code>modulefile</code> 如下</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#%Module</span><br><span class="line"></span><br><span class="line">proc ModulesHelp &#123;&#125; &#123;</span><br><span class="line">  puts stderr &quot;gcc $::version&quot;</span><br><span class="line">  puts stderr &#123;Copyright (C) 2023 Free Software Foundation, Inc.&#125;</span><br><span class="line">  puts stderr &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">set             version     13.2.0</span><br><span class="line">set             prefix      /opt/compiler/gcc/13.2.0</span><br><span class="line">set-alias       gcc         gcc-13</span><br><span class="line"></span><br><span class="line">module-whatis &quot;load gcc-$version&quot;</span><br><span class="line"></span><br><span class="line">conflict        openmpi</span><br><span class="line">prereq          x86-gnu</span><br><span class="line"></span><br><span class="line">setenv          GCC_HOME        $prefix</span><br><span class="line">setenv          GCC_INCLUDE     $prefix/include</span><br><span class="line">prepend-path    LD_LIBRARY_PATH $prefix/lib</span><br><span class="line">prepend-path    PATH            $prefix/bin</span><br></pre></td></tr></table></figure>
-
 <ol>
 <li>开头 <code>#%Module</code> 称为 <code>Modules magic cookie</code>，工具会自动将文件识别为 <code>modulefile</code></li>
 <li>Tcl procedure <code>ModulesHelp</code> 用于添加模块帮助信息，可通过 <code>ml help gcc/13.2.0</code> 输出</li>
 </ol>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-------------------------------------------------------------------</span><br><span class="line">Module Specific Help for /opt/tools/Modules/Compiler/gcc/13.2.0:</span><br><span class="line"></span><br><span class="line">gcc 13.2.0</span><br><span class="line">Copyright (C) 2023 Free Software Foundation, Inc.</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
-
 <ol start="3">
 <li>module-whatis 添加模块信息，执行 <code>ml whatis gcc/13.2.0</code></li>
 </ol>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc/13.2.0: load gcc-13.2.0</span><br></pre></td></tr></table></figure>
-
 <ol start="4">
 <li>执行 <code>ml show gcc/13.2.0</code> 显示模块完整信息</li>
 </ol>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-------------------------------------------------------------------</span><br><span class="line">/opt/tools/Modules/Compiler/gcc/13.2.0:</span><br><span class="line"></span><br><span class="line">set-alias       gcc gcc-13</span><br><span class="line">module-whatis   &#123;load gcc-13.2.0&#125;</span><br><span class="line">conflict        openmpi</span><br><span class="line">prereq          x86-gnu</span><br><span class="line">setenv          GCC_HOME /opt/compiler/gcc/13.2.0</span><br><span class="line">setenv          GCC_INCLUDE /opt/compiler/gcc/13.2.0/include</span><br><span class="line">prepend-path    LD_LIBRARY_PATH /opt/compiler/gcc/13.2.0/lib</span><br><span class="line">prepend-path    PATH /opt/compiler/gcc/13.2.0/bin</span><br><span class="line">-------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
-
-<h3 id="高级功能"><a href="#高级功能" class="headerlink" title="高级功能"></a>高级功能</h3><ol>
+<h3 id="高级功能"><a class="markdownIt-Anchor" href="#高级功能"></a> 高级功能</h3>
+<ol>
 <li>通过 Tcl 编程简化定义，参考案例 <a target="_blank" rel="noopener" href="https://modules.readthedocs.io/en/latest/cookbook.html">Environment Modules Cookbook</a></li>
 <li>案例文件相应文件参考 <a target="_blank" rel="noopener" href="https://github.com/cea-hpc/modules/tree/main/doc/example">Github-Modules Example</a></li>
 <li>更多 <code>module</code> 选项参考 <a target="_blank" rel="noopener" href="https://modules.readthedocs.io/en/latest/module.html#module-sub-commands">Sub Commands</a>，环境变量参考 <a target="_blank" rel="noopener" href="https://modules.readthedocs.io/en/latest/module.html#environment">Environment</a></li>
 <li>更多 <code>modulefile</code> 命令参考 <a target="_blank" rel="noopener" href="https://modules.readthedocs.io/en/latest/modulefile.html#modules-specific-tcl-commands">Specific Tcl Commands</a>，变量参考 <a target="_blank" rel="noopener" href="https://modules.readthedocs.io/en/latest/modulefile.html#modules-variables">Variables</a></li>
 </ol>
-<h2 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h2><table>
+<h2 id="常用指令"><a class="markdownIt-Anchor" href="#常用指令"></a> 常用指令</h2>
+<table>
 <thead>
 <tr>
-<th align="left">Command</th>
-<th align="left">Description</th>
+<th style="text-align:left">Command</th>
+<th style="text-align:left">Description</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left">ml avail</td>
-<td align="left">查看可用模块</td>
+<tbody>
+<tr>
+<td style="text-align:left">ml avail</td>
+<td style="text-align:left">查看可用模块</td>
 </tr>
 <tr>
-<td align="left">ml load&#x2F;add modulefile</td>
-<td align="left">加载模块</td>
+<td style="text-align:left">ml load/add modulefile</td>
+<td style="text-align:left">加载模块</td>
 </tr>
 <tr>
-<td align="left">ml list</td>
-<td align="left">查看已加载模块</td>
+<td style="text-align:left">ml list</td>
+<td style="text-align:left">查看已加载模块</td>
 </tr>
 <tr>
-<td align="left">ml unload&#x2F;rm modulefile</td>
-<td align="left">卸载模块</td>
+<td style="text-align:left">ml unload/rm modulefile</td>
+<td style="text-align:left">卸载模块</td>
 </tr>
 <tr>
-<td align="left">ml switch&#x2F;swap mod1 mod2</td>
-<td align="left">卸载mod1并加载mod2</td>
+<td style="text-align:left">ml switch/swap mod1 mod2</td>
+<td style="text-align:left">卸载mod1并加载mod2</td>
 </tr>
 <tr>
-<td align="left">ml purge</td>
-<td align="left">清空模块</td>
+<td style="text-align:left">ml purge</td>
+<td style="text-align:left">清空模块</td>
 </tr>
 <tr>
-<td align="left">ml whatis modulefile</td>
-<td align="left">显示模块信息</td>
+<td style="text-align:left">ml whatis modulefile</td>
+<td style="text-align:left">显示模块信息</td>
 </tr>
 <tr>
-<td align="left">ml show modulefile</td>
-<td align="left">显示模块详细信息</td>
+<td style="text-align:left">ml show modulefile</td>
+<td style="text-align:left">显示模块详细信息</td>
 </tr>
 <tr>
-<td align="left">ml help modulefile</td>
-<td align="left">显示模块帮助信息</td>
+<td style="text-align:left">ml help modulefile</td>
+<td style="text-align:left">显示模块帮助信息</td>
 </tr>
 <tr>
-<td align="left">module lint modulefile</td>
-<td align="left">检查模块语法</td>
+<td style="text-align:left">module lint modulefile</td>
+<td style="text-align:left">检查模块语法</td>
 </tr>
 <tr>
-<td align="left">module use modulepath</td>
-<td align="left">添加模块路径</td>
+<td style="text-align:left">module use modulepath</td>
+<td style="text-align:left">添加模块路径</td>
 </tr>
 <tr>
-<td align="left">module source modulefile</td>
-<td align="left">执行脚本文件</td>
+<td style="text-align:left">module source modulefile</td>
+<td style="text-align:left">执行脚本文件</td>
 </tr>
 <tr>
-<td align="left">module sh-to-mod shellfile</td>
-<td align="left">脚本文件转换</td>
+<td style="text-align:left">module sh-to-mod shellfile</td>
+<td style="text-align:left">脚本文件转换</td>
 </tr>
 <tr>
-<td align="left">module help</td>
-<td align="left">帮助</td>
+<td style="text-align:left">module help</td>
+<td style="text-align:left">帮助</td>
 </tr>
-</tbody></table>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://modules.readthedocs.io/en/latest/module.html#module-1">Environment Modules 文档</a><br><a target="_blank" rel="noopener" href="https://packages.ubuntu.com/en/source/noble/modules">Ubuntu Source Package: modules</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yeungchie/p/16268954.html">环境变量管理工具 Modules 安装和使用 - YEUNGCHIE</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/linagcheng/p/15843313.html">用Modules管理环境变量</a><br><a target="_blank" rel="noopener" href="https://nscc.mrzhenggang.com/user-manual/config-env-with-module/#_3-2-%E6%9B%BF%E6%8D%A2%E6%A8%A1%E5%9D%97">使用 module 配置环境</a></p>
+</tbody>
+</table>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<p><a target="_blank" rel="noopener" href="https://modules.readthedocs.io/en/latest/module.html#module-1">Environment Modules 文档</a><br />
+<a target="_blank" rel="noopener" href="https://packages.ubuntu.com/en/source/noble/modules">Ubuntu Source Package: modules</a><br />
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/yeungchie/p/16268954.html">环境变量管理工具 Modules 安装和使用 - YEUNGCHIE</a><br />
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/linagcheng/p/15843313.html">用Modules管理环境变量</a><br />
+<a target="_blank" rel="noopener" href="https://nscc.mrzhenggang.com/user-manual/config-env-with-module/#_3-2-%E6%9B%BF%E6%8D%A2%E6%A8%A1%E5%9D%97">使用 module 配置环境</a></p>
 
     </div>
 
@@ -472,6 +497,9 @@
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2024/08/20/Test_Katex/" rel="next" title="KaTex 公式渲染测试">
+                  KaTex 公式渲染测试 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -502,13 +530,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="Word count total">3k</span>
+    <span title="Word count total">4k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">9 mins.</span>
+    <span title="Reading time total">13 mins.</span>
   </span>
 </div>
 
@@ -538,16 +566,27 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js","integrity":"sha256-stuqcu2FrjYCXDOytWFA5SoUE/r3nkp6gTglzNSlavU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
   
 
 
 
 
-
-
   
 
-
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
 
 
 

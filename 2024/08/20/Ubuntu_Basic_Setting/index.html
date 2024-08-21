@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="Ubuntu 基础设置，包括终端、Vim、程序快捷方式、Git等。">
 <meta property="og:type" content="article">
@@ -82,6 +82,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -89,12 +90,38 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">4</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">1</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">5</span></a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">5</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">1</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">6</span></a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </header>
         
@@ -114,7 +141,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">主题设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">终端设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E8%B7%AF%E5%BE%84%E5%90%8D%E7%A7%B0%E5%A4%AA%E9%95%BF"><span class="nav-number">2.1.</span> <span class="nav-text">终端路径名称太长</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vim-%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">Vim 设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E8%A1%8C%E5%8F%B7"><span class="nav-number">3.1.</span> <span class="nav-text">显示行号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">程序设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E9%93%BE%E6%8E%A5"><span class="nav-number">4.1.</span> <span class="nav-text">软链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%8C%E9%9D%A2%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F"><span class="nav-number">4.2.</span> <span class="nav-text">桌面快捷方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-Git"><span class="nav-number">5.</span> <span class="nav-text">配置 Git</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">5.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VSCode"><span class="nav-number">5.2.</span> <span class="nav-text">VSCode</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text"> 主题设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text"> 终端设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E8%B7%AF%E5%BE%84%E5%90%8D%E7%A7%B0%E5%A4%AA%E9%95%BF"><span class="nav-number">2.1.</span> <span class="nav-text"> 终端路径名称太长</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim-%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text"> Vim 设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E8%A1%8C%E5%8F%B7"><span class="nav-number">3.1.</span> <span class="nav-text"> 显示行号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text"> 程序设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E9%93%BE%E6%8E%A5"><span class="nav-number">4.1.</span> <span class="nav-text"> 软链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%8C%E9%9D%A2%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F"><span class="nav-number">4.2.</span> <span class="nav-text"> 桌面快捷方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-git"><span class="nav-number">5.</span> <span class="nav-text"> 配置 Git</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">5.1.</span> <span class="nav-text"> 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vscode"><span class="nav-number">5.2.</span> <span class="nav-text"> VSCode</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -129,7 +156,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -140,7 +167,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -240,62 +267,61 @@
     
     <div class="post-body" itemprop="articleBody"><p>Ubuntu 基础设置，包括终端、Vim、程序快捷方式、Git等。</p>
 <span id="more"></span>
-
-<h2 id="主题设置"><a href="#主题设置" class="headerlink" title="主题设置"></a>主题设置</h2><ol>
+<h2 id="主题设置"><a class="markdownIt-Anchor" href="#主题设置"></a> 主题设置</h2>
+<ol>
 <li>修改终端颜色</li>
 <li>修改图标大小</li>
 <li>修改壁纸</li>
 </ol>
-<h2 id="终端设置"><a href="#终端设置" class="headerlink" title="终端设置"></a>终端设置</h2><h3 id="终端路径名称太长"><a href="#终端路径名称太长" class="headerlink" title="终端路径名称太长"></a>终端路径名称太长</h3><p>修改配置文件 <code>vim ~/.bashrc</code> 中小写 w 为大写 W，<code>source ~/.bashrc</code></p>
+<h2 id="终端设置"><a class="markdownIt-Anchor" href="#终端设置"></a> 终端设置</h2>
+<h3 id="终端路径名称太长"><a class="markdownIt-Anchor" href="#终端路径名称太长"></a> 终端路径名称太长</h3>
+<p>修改配置文件 <code>vim ~/.bashrc</code> 中小写 w 为大写 W，<code>source ~/.bashrc</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$color_prompt</span>&quot;</span> = <span class="built_in">yes</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># PS1=&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ &#x27;</span></span><br><span class="line">    PS1=<span class="string">&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ &#x27;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment"># PS1=&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\w\$ &#x27;</span></span><br><span class="line">    PS1=<span class="string">&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\W\$ &#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Vim-设置"><a href="#Vim-设置" class="headerlink" title="Vim 设置"></a>Vim 设置</h2><h3 id="显示行号"><a href="#显示行号" class="headerlink" title="显示行号"></a>显示行号</h3><ol>
+<h2 id="vim-设置"><a class="markdownIt-Anchor" href="#vim-设置"></a> Vim 设置</h2>
+<h3 id="显示行号"><a class="markdownIt-Anchor" href="#显示行号"></a> 显示行号</h3>
+<ol>
 <li>临时显示行号 <code>:set number</code> 或者 <code>:set nu</code></li>
-<li>永久显示行号<ol>
+<li>永久显示行号
+<ol>
 <li>查找配置文件 <code>find / -name vimrc 2&gt;&amp;1 | grep -v &quot;Permission denied&quot;</code></li>
 <li>编辑  <code>sudo vim /etc/vimrc</code>，添加 <code>set number</code></li>
 </ol>
 </li>
 </ol>
-<h2 id="程序设置"><a href="#程序设置" class="headerlink" title="程序设置"></a>程序设置</h2><h3 id="软链接"><a href="#软链接" class="headerlink" title="软链接"></a>软链接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /path/to/soure/file /path/to/target/file</span><br></pre></td></tr></table></figure>
-
-<h3 id="桌面快捷方式"><a href="#桌面快捷方式" class="headerlink" title="桌面快捷方式"></a>桌面快捷方式</h3><ol>
+<h2 id="程序设置"><a class="markdownIt-Anchor" href="#程序设置"></a> 程序设置</h2>
+<h3 id="软链接"><a class="markdownIt-Anchor" href="#软链接"></a> 软链接</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /path/to/soure/file /path/to/target/file</span><br></pre></td></tr></table></figure>
+<h3 id="桌面快捷方式"><a class="markdownIt-Anchor" href="#桌面快捷方式"></a> 桌面快捷方式</h3>
+<ol>
 <li>打开 application 文件夹</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/share/applications</span><br><span class="line"><span class="built_in">cd</span> ~/.local/share/applications</span><br></pre></td></tr></table></figure>
-
 <ol start="2">
 <li>创建应用快捷方式 <code>touch myapp.desktop</code></li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Encoding=UTF-8</span><br><span class="line">Name=myapp</span><br><span class="line">Comment=This is my application</span><br><span class="line">Exec=/path/to/myapp</span><br><span class="line">Icon=/path/to/myapp_image.png</span><br><span class="line">Terminal=<span class="literal">false</span></span><br><span class="line">Type=Application</span><br></pre></td></tr></table></figure>
-
 <ol start="3">
 <li>增加权限 <code>chmod +x myapp.desktop</code>，注意执行时如果出现闪退，则在终端中直接执行 <code>/path/to/myapp</code> 查看出错信息并修复</li>
 </ol>
-<h2 id="配置-Git"><a href="#配置-Git" class="headerlink" title="配置 Git"></a>配置 Git</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装 Git</p>
+<h2 id="配置-git"><a class="markdownIt-Anchor" href="#配置-git"></a> 配置 Git</h2>
+<h3 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h3>
+<p>安装 Git</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install git</span><br></pre></td></tr></table></figure>
-
 <p>配置 Git 用户名和邮箱</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name git_name</span><br><span class="line">git config --global user.email git_email@email.com</span><br><span class="line">git config --list</span><br></pre></td></tr></table></figure>
-
 <p>生成 SSH 密钥，设置默认</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C git_email@email.com</span><br></pre></td></tr></table></figure>
-
 <p>提示信息</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Your identification has been saved <span class="keyword">in</span> ~/.ssh/id_rsa</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-
 <p>查看公钥内容并复制到 SSH keys 中，在 <code>Github -&gt; Setting -&gt; SSH and GPG keys -&gt; new SSH key</code> 新建key并输入 title 和 key 即可</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-
 <p>检查是否设置成功 <a target="_blank" rel="noopener" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection">Testing your SSH connection</a>，对比公钥指纹是否一致</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<h3 id="VSCode"><a href="#VSCode" class="headerlink" title="VSCode"></a>VSCode</h3><p>拉取项目 <code>git clone https://github.com/xxxxx.git/</code>，首次可能报错</p>
+<h3 id="vscode"><a class="markdownIt-Anchor" href="#vscode"></a> VSCode</h3>
+<p>拉取项目 <code>git clone https://github.com/xxxxx.git/</code>，首次可能报错</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/xxxxx.git/&#x27;</span>: gnutls_handshake() failed: The TLS connection was non-properly terminated.</span><br></pre></td></tr></table></figure>
-
 <p>设置代理或 gnutls 包原因 <a target="_blank" rel="noopener" href="https://askubuntu.com/questions/186847/error-gnutls-handshake-failed-when-connecting-to-https-servers">Ubuntu error: gnutls_handshake()</a>，后者可采用 <code>openssl</code> 编译或更换更为稳定的代理</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.https://github.com.proxy http://127.0.0.1:7890</span><br><span class="line">git config --global https.https://github.com.proxy https://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
-
 <p>克隆私有仓库可能报错，参考 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/68775869/message-support-for-password-authentication-was-removed">Stackoverflow Message</a></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">remote: Support <span class="keyword">for</span> password authentication was removed on August 13, 2021.</span><br><span class="line">remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls <span class="keyword">for</span> information on currently recommended modes of authentication.</span><br></pre></td></tr></table></figure>
 
@@ -354,13 +380,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="Word count total">3k</span>
+    <span title="Word count total">4k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">9 mins.</span>
+    <span title="Reading time total">13 mins.</span>
   </span>
 </div>
 
@@ -390,16 +416,27 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js","integrity":"sha256-stuqcu2FrjYCXDOytWFA5SoUE/r3nkp6gTglzNSlavU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
   
 
 
 
 
-
-
   
 
-
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
 
 
 

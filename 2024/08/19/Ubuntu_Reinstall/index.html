@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="由于旧系统崩溃无法开机进入，尝试多种方法无果，因此在双系统下重新安装 Ubuntu 系统。  硬件：[微星 B550M]-[AMD R9-5900X]-[Ubuntu 22.04]-[Windows 10]">
 <meta property="og:type" content="article">
@@ -80,6 +80,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -87,12 +88,38 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">4</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">1</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">5</span></a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">5</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">1</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">6</span></a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </header>
         
@@ -112,7 +139,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD-Ubuntu"><span class="nav-number">1.</span> <span class="nav-text">卸载 Ubuntu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Ubuntu"><span class="nav-number">2.</span> <span class="nav-text">安装 Ubuntu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">可能存在的问题</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD-ubuntu"><span class="nav-number">1.</span> <span class="nav-text"> 卸载 Ubuntu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-ubuntu"><span class="nav-number">2.</span> <span class="nav-text"> 安装 Ubuntu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text"> 可能存在的问题</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -127,7 +154,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -138,7 +165,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -247,11 +274,12 @@
 <p>硬件：[微星 B550M]-[AMD R9-5900X]-[Ubuntu 22.04]-[Windows 10]</p>
 </blockquote>
 <span id="more"></span>
-
-<h2 id="卸载-Ubuntu"><a href="#卸载-Ubuntu" class="headerlink" title="卸载 Ubuntu"></a>卸载 Ubuntu</h2><ol>
+<h2 id="卸载-ubuntu"><a class="markdownIt-Anchor" href="#卸载-ubuntu"></a> 卸载 Ubuntu</h2>
+<ol>
 <li>备份 Ubuntu 系统文件</li>
 <li>开机时连续按 <code>Del</code> 键，进入 BIOS 系统，进入 <code>Setting &gt; Boot</code> 修改开机启动项</li>
-<li>Windows系统下，删除 win10 EFI 中的 Ubuntu 文件<ol>
+<li>Windows系统下，删除 win10 EFI 中的 Ubuntu 文件
+<ol>
 <li><code>Win + R</code> 运行 <code>diskpart</code></li>
 <li><code>list disk</code> 查看磁盘，<code>select disk 0</code> 选择磁盘 0</li>
 <li><code>list partition</code> 查看分区，<code>select partition 1</code> 选择 EFI 系统分区</li>
@@ -260,29 +288,37 @@
 <li>回到 <code>diskpart</code>，移除盘符 <code>remove letter=p</code></li>
 </ol>
 </li>
-<li>删除 Ubuntu 所在分区<ol>
+<li>删除 Ubuntu 所在分区
+<ol>
 <li>选择磁盘0，<code>list partition</code> 查看分区，一般未知分区为 <code>Ubuntu</code> 分区</li>
 <li><code>select partition 4</code> 选择并通过 <code>delete partition</code> 删除分区</li>
 <li>由于本机未为 Ubuntu 单独分配 EFI 分区，因此直接重复删除其他相关分区即可</li>
 </ol>
 </li>
 </ol>
-<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ZChen1996/article/details/115436436#:~:text=win10%20%2B%20ubuntu20.04%20%E5%8F%8C%E7%B3%BB%E7%BB%9F%20%28UEFI%2BGPT%29%20%E5%8D%B8%E8%BD%BD%20%28%E5%88%A0%E9%99%A4%29ubuntu20.04%201,%E5%88%A0%E9%99%A4%E5%88%86%E5%8C%BA%E6%96%B9%E6%B3%95%E4%BA%8C%20EFI%20%E5%88%86%E5%8C%BA%E5%88%A0%E9%99%A4%E6%AF%94%E8%BE%83%E7%89%B9%E6%AE%8A%EF%BC%8C%E9%9C%80%E8%A6%81%E4%BD%BF%E7%94%A8%20%60delete%20partition%20override%60%207%20%E5%AE%8C%E6%88%90%E5%8D%B8%E8%BD%BD%EF%BC%8C%E7%BB%93%E6%9D%9F">win10 + ubuntu20.04 双系统卸载(删除) ubuntu20.04</a><br><a target="_blank" rel="noopener" href="https://bbs.huaweicloud.com/blogs/303695">教你彻底卸载Ubuntu双系统，去污不残留</a><br><a target="_blank" rel="noopener" href="https://houkaifa.com/2019/08/15/ubuntu-uninstall/">如何科学卸载 Ubuntu？</a></p>
-<h2 id="安装-Ubuntu"><a href="#安装-Ubuntu" class="headerlink" title="安装 Ubuntu"></a>安装 Ubuntu</h2><ol>
+<p>参考：<br />
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/ZChen1996/article/details/115436436#:~:text=win10%20%2B%20ubuntu20.04%20%E5%8F%8C%E7%B3%BB%E7%BB%9F%20%28UEFI%2BGPT%29%20%E5%8D%B8%E8%BD%BD%20%28%E5%88%A0%E9%99%A4%29ubuntu20.04%201,%E5%88%A0%E9%99%A4%E5%88%86%E5%8C%BA%E6%96%B9%E6%B3%95%E4%BA%8C%20EFI%20%E5%88%86%E5%8C%BA%E5%88%A0%E9%99%A4%E6%AF%94%E8%BE%83%E7%89%B9%E6%AE%8A%EF%BC%8C%E9%9C%80%E8%A6%81%E4%BD%BF%E7%94%A8%20%60delete%20partition%20override%60%207%20%E5%AE%8C%E6%88%90%E5%8D%B8%E8%BD%BD%EF%BC%8C%E7%BB%93%E6%9D%9F">win10 + ubuntu20.04 双系统卸载(删除) ubuntu20.04</a><br />
+<a target="_blank" rel="noopener" href="https://bbs.huaweicloud.com/blogs/303695">教你彻底卸载Ubuntu双系统，去污不残留</a><br />
+<a target="_blank" rel="noopener" href="https://houkaifa.com/2019/08/15/ubuntu-uninstall/">如何科学卸载 Ubuntu？</a></p>
+<h2 id="安装-ubuntu"><a class="markdownIt-Anchor" href="#安装-ubuntu"></a> 安装 Ubuntu</h2>
+<ol>
 <li><code>Win + R</code> 运行 <code>msinfo32</code> 确认 BIOS 模式为 UEFI</li>
 <li>下载 <a target="_blank" rel="noopener" href="https://ubuntu.com/desktop#get-ubuntu">Ubuntu Desktop</a>，此处版本为 <code>22.04 LTS</code></li>
-<li>通过 UltraISO 刻录至 U 盘<ol>
+<li>通过 UltraISO 刻录至 U 盘
+<ol>
 <li>选择 <code>文件 &gt; 打开</code> 打开 Ubuntu ISO 文件</li>
 <li>选择 <code>启动 &gt; 写入硬盘映像</code>，选择 U 盘 <code>格式化</code> 并 <code>写入</code></li>
 </ol>
 </li>
-<li>安装 Ubuntu<ol>
+<li>安装 Ubuntu
+<ol>
 <li>开机时连续按 <code>Del</code> 键，进入 BIOS 系统</li>
 <li>进入 <code>Settings\Advanced\Windows OS Configuration</code> 关闭 <code>Secure Boot</code></li>
 <li>选择开机启动项为 <code>USB</code></li>
 <li>选择 <code>Try or Install Ubuntu</code> 开始安装，按顺序安装</li>
 <li>暂时选择不连接到互联网，不安装图形和Wi-Fi硬件驱动</li>
-<li>选择 <code>手动分区</code><ol>
+<li>选择 <code>手动分区</code>
+<ol>
 <li><code>/Swap</code> 分区与物理内存一致</li>
 <li><code>Ext4</code> 挂载点 <code>/</code> 用于 Linux 系统文件及默认软件安装，分配后会自动选择 <code>安装引导程序的设备</code></li>
 <li><code>Ext4</code> 挂载点 <code>/home</code> 用于 Linux 用户文件</li>
@@ -296,7 +332,8 @@
 <li>进入 Ubuntu 系统，连接网络，更新软件</li>
 </ol>
 <p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/codeHonghu/article/details/111940656">Win10 + Ubuntu 20.04 双系统安装方法</a></p>
-<h2 id="可能存在的问题"><a href="#可能存在的问题" class="headerlink" title="可能存在的问题"></a>可能存在的问题</h2><ol>
+<h2 id="可能存在的问题"><a class="markdownIt-Anchor" href="#可能存在的问题"></a> 可能存在的问题</h2>
+<ol>
 <li>独显驱动问题导致死机</li>
 </ol>
 
@@ -353,13 +390,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="Word count total">3k</span>
+    <span title="Word count total">4k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">9 mins.</span>
+    <span title="Reading time total">13 mins.</span>
   </span>
 </div>
 
@@ -389,16 +426,27 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js","integrity":"sha256-stuqcu2FrjYCXDOytWFA5SoUE/r3nkp6gTglzNSlavU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
   
 
 
 
 
-
-
   
 
-
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
 
 
 
