@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>KaTex 公式渲染测试</title>
-    <url>/2024/08/20/Test_Katex/</url>
+    <url>/2024/08/20/Test/Test_Katex/</url>
     <content><![CDATA[<p>测试 <a href="https://katex.org/docs/supported.html">Katex</a> 语法</p>
 <span id="more"></span>
 <p>存在部分渲染问题，参考 <a href="https://blog.windsky.tech/2021/01/30/Hexo-Katex/">Hexo博客渲染KaTeX数学公式</a></p>
@@ -1095,8 +1095,59 @@ M0 50 h400000 v40H0z m0 194h40000v40H0z"/></svg></span></span></span></span></sp
       </tags>
   </entry>
   <entry>
+    <title>Hello World</title>
+    <url>/2024/08/19/Test/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+<h2 id="quick-start"><a class="markdownIt-Anchor" href="#quick-start"></a> Quick Start</h2>
+<h3 id="create-a-new-post"><a class="markdownIt-Anchor" href="#create-a-new-post"></a> Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="run-server"><a class="markdownIt-Anchor" href="#run-server"></a> Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="generate-static-files"><a class="markdownIt-Anchor" href="#generate-static-files"></a> Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="deploy-to-remote-sites"><a class="markdownIt-Anchor" href="#deploy-to-remote-sites"></a> Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h2 id="test-pictures"><a class="markdownIt-Anchor" href="#test-pictures"></a> Test Pictures</h2>
+<div class="group-picture"><div class="group-picture-row"><div class="group-picture-column"><img src="/images/test/Jiu-Zhai-Gou.jpeg" alt="" /></div></div></div>
+<div class="group-picture"><div class="group-picture-row"><div class="group-picture-column"><img src="/images/test/Gaint-Panda.jpeg" alt="" /></div><div class="group-picture-column"><img src="/images/test/Red-Panda.jpeg" alt="" /></div></div></div>
+<h2 id="test-mermaid"><a class="markdownIt-Anchor" href="#test-mermaid"></a> Test Mermaid</h2>
+<pre><code class="highlight mermaid">graph TD
+A[Hard] --&gt;|Text| B(Round)
+B --&gt; C&#123;Decision&#125;
+C --&gt;|One| D[Result 1]
+C --&gt;|Two| E[Result 2]</code></pre>
+<h2 id="test-note"><a class="markdownIt-Anchor" href="#test-note"></a> Test Note</h2>
+<div class="note default"><h4 id="default-header"><a class="markdownIt-Anchor" href="#default-header"></a> Default Header</h4>
+<p>This is default note.</p>
+</div>
+<div class="note success"><h4 id="success-header"><a class="markdownIt-Anchor" href="#success-header"></a> Success Header</h4>
+<p>This is success note.</p>
+</div>
+<div class="note danger"><h4 id="danger-header"><a class="markdownIt-Anchor" href="#danger-header"></a> Danger Header</h4>
+<p>This is danger note.</p>
+</div>
+<div class="note info"><h4 id="info-header"><a class="markdownIt-Anchor" href="#info-header"></a> Info Header</h4>
+<p>This is info note.</p>
+</div>
+<details class="note info no-icon"><summary><p>This is a summary</p>
+</summary>
+<h4 id="summary-header"><a class="markdownIt-Anchor" href="#summary-header"></a> Summary Header</h4>
+<p>A good medicine tastes bitter.</p>
+
+</details>
+]]></content>
+      <tags>
+        <tag>Test</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ubuntu 基础设置</title>
-    <url>/2024/08/20/Ubuntu_Basic_Setting/</url>
+    <url>/2024/08/20/Ubuntu/Ubuntu_Basic_Setting/</url>
     <content><![CDATA[<p>Ubuntu 基础设置，包括终端、Vim、程序快捷方式、Git等。</p>
 <span id="more"></span>
 <h2 id="主题设置"><a class="markdownIt-Anchor" href="#主题设置"></a> 主题设置</h2>
@@ -1168,7 +1219,7 @@ M0 50 h400000 v40H0z m0 194h40000v40H0z"/></svg></span></span></span></span></sp
   </entry>
   <entry>
     <title>Ubuntu 24.02 安装配置 Environment Modules 工具</title>
-    <url>/2024/08/20/Ubuntu_Environment_Modules/</url>
+    <url>/2024/08/20/Ubuntu/Ubuntu_Environment_Modules/</url>
     <content><![CDATA[<p>Environment Modules 是一种简化的 Shell 初始化工具，可用于修改终端环境。</p>
 <span id="more"></span>
 <h2 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h2>
@@ -1391,7 +1442,7 @@ M0 50 h400000 v40H0z m0 194h40000v40H0z"/></svg></span></span></span></span></sp
   </entry>
   <entry>
     <title>重新安装 Ubuntu 24.02 LTS 系统</title>
-    <url>/2024/08/19/Ubuntu_Reinstall/</url>
+    <url>/2024/08/19/Ubuntu/Ubuntu_Reinstall/</url>
     <content><![CDATA[<p>由于旧系统崩溃无法开机进入，尝试多种方法无果，因此在双系统下重新安装 Ubuntu 系统。</p>
 <blockquote>
 <p>硬件：[微星 B550M]-[AMD R9-5900X]-[Ubuntu 22.04]-[Windows 10]</p>
@@ -1465,57 +1516,6 @@ M0 50 h400000 v40H0z m0 194h40000v40H0z"/></svg></span></span></span></span></sp
       </categories>
       <tags>
         <tag>Ubuntu</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2024/08/19/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="quick-start"><a class="markdownIt-Anchor" href="#quick-start"></a> Quick Start</h2>
-<h3 id="create-a-new-post"><a class="markdownIt-Anchor" href="#create-a-new-post"></a> Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server"><a class="markdownIt-Anchor" href="#run-server"></a> Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files"><a class="markdownIt-Anchor" href="#generate-static-files"></a> Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites"><a class="markdownIt-Anchor" href="#deploy-to-remote-sites"></a> Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<h2 id="test-pictures"><a class="markdownIt-Anchor" href="#test-pictures"></a> Test Pictures</h2>
-<div class="group-picture"><div class="group-picture-row"><div class="group-picture-column"><img src="/images/test/Jiu-Zhai-Gou.jpeg" alt="" /></div></div></div>
-<div class="group-picture"><div class="group-picture-row"><div class="group-picture-column"><img src="/images/test/Gaint-Panda.jpeg" alt="" /></div><div class="group-picture-column"><img src="/images/test/Red-Panda.jpeg" alt="" /></div></div></div>
-<h2 id="test-mermaid"><a class="markdownIt-Anchor" href="#test-mermaid"></a> Test Mermaid</h2>
-<pre><code class="highlight mermaid">graph TD
-A[Hard] --&gt;|Text| B(Round)
-B --&gt; C&#123;Decision&#125;
-C --&gt;|One| D[Result 1]
-C --&gt;|Two| E[Result 2]</code></pre>
-<h2 id="test-note"><a class="markdownIt-Anchor" href="#test-note"></a> Test Note</h2>
-<div class="note default"><h4 id="default-header"><a class="markdownIt-Anchor" href="#default-header"></a> Default Header</h4>
-<p>This is default note.</p>
-</div>
-<div class="note success"><h4 id="success-header"><a class="markdownIt-Anchor" href="#success-header"></a> Success Header</h4>
-<p>This is success note.</p>
-</div>
-<div class="note danger"><h4 id="danger-header"><a class="markdownIt-Anchor" href="#danger-header"></a> Danger Header</h4>
-<p>This is danger note.</p>
-</div>
-<div class="note info"><h4 id="info-header"><a class="markdownIt-Anchor" href="#info-header"></a> Info Header</h4>
-<p>This is info note.</p>
-</div>
-<details class="note info no-icon"><summary><p>This is a summary</p>
-</summary>
-<h4 id="summary-header"><a class="markdownIt-Anchor" href="#summary-header"></a> Summary Header</h4>
-<p>A good medicine tastes bitter.</p>
-
-</details>
-]]></content>
-      <tags>
-        <tag>Test</tag>
       </tags>
   </entry>
 </search>
