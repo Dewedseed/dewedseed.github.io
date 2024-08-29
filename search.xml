@@ -1146,78 +1146,6 @@ C --&gt;|Two| E[Result 2]</code></pre>
       </tags>
   </entry>
   <entry>
-    <title>Ubuntu 基础设置</title>
-    <url>/2024/08/20/Ubuntu/Ubuntu_Basic_Setting/</url>
-    <content><![CDATA[<p>Ubuntu 基础设置，包括终端、Vim、程序快捷方式、Git等。</p>
-<span id="more"></span>
-<h2 id="主题设置"><a class="markdownIt-Anchor" href="#主题设置"></a> 主题设置</h2>
-<ol>
-<li>修改终端颜色</li>
-<li>修改图标大小</li>
-<li>修改壁纸</li>
-</ol>
-<h2 id="终端设置"><a class="markdownIt-Anchor" href="#终端设置"></a> 终端设置</h2>
-<h3 id="终端路径名称太长"><a class="markdownIt-Anchor" href="#终端路径名称太长"></a> 终端路径名称太长</h3>
-<p>修改配置文件 <code>vim ~/.bashrc</code> 中小写 w 为大写 W，<code>source ~/.bashrc</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$color_prompt</span>&quot;</span> = <span class="built_in">yes</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># PS1=&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ &#x27;</span></span><br><span class="line">    PS1=<span class="string">&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ &#x27;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment"># PS1=&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\w\$ &#x27;</span></span><br><span class="line">    PS1=<span class="string">&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\W\$ &#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-<h2 id="vim-设置"><a class="markdownIt-Anchor" href="#vim-设置"></a> Vim 设置</h2>
-<h3 id="显示行号"><a class="markdownIt-Anchor" href="#显示行号"></a> 显示行号</h3>
-<ol>
-<li>临时显示行号 <code>:set number</code> 或者 <code>:set nu</code></li>
-<li>永久显示行号
-<ol>
-<li>查找配置文件 <code>find / -name vimrc 2&gt;&amp;1 | grep -v &quot;Permission denied&quot;</code></li>
-<li>编辑  <code>sudo vim /etc/vimrc</code>，添加 <code>set number</code></li>
-</ol>
-</li>
-</ol>
-<h2 id="程序设置"><a class="markdownIt-Anchor" href="#程序设置"></a> 程序设置</h2>
-<h3 id="软链接"><a class="markdownIt-Anchor" href="#软链接"></a> 软链接</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /path/to/soure/file /path/to/target/file</span><br></pre></td></tr></table></figure>
-<h3 id="桌面快捷方式"><a class="markdownIt-Anchor" href="#桌面快捷方式"></a> 桌面快捷方式</h3>
-<ol>
-<li>打开 application 文件夹</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/share/applications</span><br><span class="line"><span class="built_in">cd</span> ~/.local/share/applications</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>创建应用快捷方式 <code>touch myapp.desktop</code></li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Encoding=UTF-8</span><br><span class="line">Name=myapp</span><br><span class="line">Comment=This is my application</span><br><span class="line">Exec=/path/to/myapp</span><br><span class="line">Icon=/path/to/myapp_image.png</span><br><span class="line">Terminal=<span class="literal">false</span></span><br><span class="line">Type=Application</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>增加权限 <code>chmod +x myapp.desktop</code>，注意执行时如果出现闪退，则在终端中直接执行 <code>/path/to/myapp</code> 查看出错信息并修复</li>
-</ol>
-<h2 id="配置-git"><a class="markdownIt-Anchor" href="#配置-git"></a> 配置 Git</h2>
-<h3 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h3>
-<p>安装 Git</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install git</span><br></pre></td></tr></table></figure>
-<p>配置 Git 用户名和邮箱</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name git_name</span><br><span class="line">git config --global user.email git_email@email.com</span><br><span class="line">git config --list</span><br></pre></td></tr></table></figure>
-<p>生成 SSH 密钥，设置默认</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C git_email@email.com</span><br></pre></td></tr></table></figure>
-<p>提示信息</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Your identification has been saved <span class="keyword">in</span> ~/.ssh/id_rsa</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-<p>查看公钥内容并复制到 SSH keys 中，在 <code>Github -&gt; Setting -&gt; SSH and GPG keys -&gt; new SSH key</code> 新建key并输入 title 和 key 即可</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-<p>检查是否设置成功 <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection">Testing your SSH connection</a>，对比公钥指纹是否一致</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-<h3 id="vscode"><a class="markdownIt-Anchor" href="#vscode"></a> VSCode</h3>
-<p>拉取项目 <code>git clone https://github.com/xxxxx.git/</code>，首次可能报错</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/xxxxx.git/&#x27;</span>: gnutls_handshake() failed: The TLS connection was non-properly terminated.</span><br></pre></td></tr></table></figure>
-<p>设置代理或 gnutls 包原因 <a href="https://askubuntu.com/questions/186847/error-gnutls-handshake-failed-when-connecting-to-https-servers">Ubuntu error: gnutls_handshake()</a>，后者可采用 <code>openssl</code> 编译或更换更为稳定的代理</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.https://github.com.proxy http://127.0.0.1:7890</span><br><span class="line">git config --global https.https://github.com.proxy https://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
-<p>克隆私有仓库可能报错，参考 <a href="https://stackoverflow.com/questions/68775869/message-support-for-password-authentication-was-removed">Stackoverflow Message</a></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">remote: Support <span class="keyword">for</span> password authentication was removed on August 13, 2021.</span><br><span class="line">remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls <span class="keyword">for</span> information on currently recommended modes of authentication.</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Ubuntu</category>
-      </categories>
-      <tags>
-        <tag>Ubuntu</tag>
-        <tag>Vim</tag>
-        <tag>Git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Ubuntu 24.02 安装配置 Environment Modules 工具</title>
     <url>/2024/08/20/Ubuntu/Ubuntu_Environment_Modules/</url>
     <content><![CDATA[<p>Environment Modules 是一种简化的 Shell 初始化工具，可用于修改终端环境。</p>
@@ -1441,6 +1369,78 @@ C --&gt;|Two| E[Result 2]</code></pre>
       </tags>
   </entry>
   <entry>
+    <title>Ubuntu 基础设置</title>
+    <url>/2024/08/20/Ubuntu/Ubuntu_Basic_Setting/</url>
+    <content><![CDATA[<p>Ubuntu 基础设置，包括终端、Vim、程序快捷方式、Git等。</p>
+<span id="more"></span>
+<h2 id="主题设置"><a class="markdownIt-Anchor" href="#主题设置"></a> 主题设置</h2>
+<ol>
+<li>修改终端颜色</li>
+<li>修改图标大小</li>
+<li>修改壁纸</li>
+</ol>
+<h2 id="终端设置"><a class="markdownIt-Anchor" href="#终端设置"></a> 终端设置</h2>
+<h3 id="终端路径名称太长"><a class="markdownIt-Anchor" href="#终端路径名称太长"></a> 终端路径名称太长</h3>
+<p>修改配置文件 <code>vim ~/.bashrc</code> 中小写 w 为大写 W，<code>source ~/.bashrc</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$color_prompt</span>&quot;</span> = <span class="built_in">yes</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># PS1=&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ &#x27;</span></span><br><span class="line">    PS1=<span class="string">&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ &#x27;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment"># PS1=&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\w\$ &#x27;</span></span><br><span class="line">    PS1=<span class="string">&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\W\$ &#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<h2 id="vim-设置"><a class="markdownIt-Anchor" href="#vim-设置"></a> Vim 设置</h2>
+<h3 id="显示行号"><a class="markdownIt-Anchor" href="#显示行号"></a> 显示行号</h3>
+<ol>
+<li>临时显示行号 <code>:set number</code> 或者 <code>:set nu</code></li>
+<li>永久显示行号
+<ol>
+<li>查找配置文件 <code>find / -name vimrc 2&gt;&amp;1 | grep -v &quot;Permission denied&quot;</code></li>
+<li>编辑  <code>sudo vim /etc/vimrc</code>，添加 <code>set number</code></li>
+</ol>
+</li>
+</ol>
+<h2 id="程序设置"><a class="markdownIt-Anchor" href="#程序设置"></a> 程序设置</h2>
+<h3 id="软链接"><a class="markdownIt-Anchor" href="#软链接"></a> 软链接</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /path/to/soure/file /path/to/target/file</span><br></pre></td></tr></table></figure>
+<h3 id="桌面快捷方式"><a class="markdownIt-Anchor" href="#桌面快捷方式"></a> 桌面快捷方式</h3>
+<ol>
+<li>打开 application 文件夹</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/share/applications</span><br><span class="line"><span class="built_in">cd</span> ~/.local/share/applications</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>创建应用快捷方式 <code>touch myapp.desktop</code></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Encoding=UTF-8</span><br><span class="line">Name=myapp</span><br><span class="line">Comment=This is my application</span><br><span class="line">Exec=/path/to/myapp</span><br><span class="line">Icon=/path/to/myapp_image.png</span><br><span class="line">Terminal=<span class="literal">false</span></span><br><span class="line">Type=Application</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>增加权限 <code>chmod +x myapp.desktop</code>，注意执行时如果出现闪退，则在终端中直接执行 <code>/path/to/myapp</code> 查看出错信息并修复</li>
+</ol>
+<h2 id="配置-git"><a class="markdownIt-Anchor" href="#配置-git"></a> 配置 Git</h2>
+<h3 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h3>
+<p>安装 Git</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install git</span><br></pre></td></tr></table></figure>
+<p>配置 Git 用户名和邮箱</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name git_name</span><br><span class="line">git config --global user.email git_email@email.com</span><br><span class="line">git config --list</span><br></pre></td></tr></table></figure>
+<p>生成 SSH 密钥，设置默认</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C git_email@email.com</span><br></pre></td></tr></table></figure>
+<p>提示信息</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Your identification has been saved <span class="keyword">in</span> ~/.ssh/id_rsa</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<p>查看公钥内容并复制到 SSH keys 中，在 <code>Github -&gt; Setting -&gt; SSH and GPG keys -&gt; new SSH key</code> 新建key并输入 title 和 key 即可</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<p>检查是否设置成功 <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection">Testing your SSH connection</a>，对比公钥指纹是否一致</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<h3 id="vscode"><a class="markdownIt-Anchor" href="#vscode"></a> VSCode</h3>
+<p>拉取项目 <code>git clone https://github.com/xxxxx.git/</code>，首次可能报错</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/xxxxx.git/&#x27;</span>: gnutls_handshake() failed: The TLS connection was non-properly terminated.</span><br></pre></td></tr></table></figure>
+<p>设置代理或 gnutls 包原因 <a href="https://askubuntu.com/questions/186847/error-gnutls-handshake-failed-when-connecting-to-https-servers">Ubuntu error: gnutls_handshake()</a>，后者可采用 <code>openssl</code> 编译或更换更为稳定的代理</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.https://github.com.proxy http://127.0.0.1:7890</span><br><span class="line">git config --global https.https://github.com.proxy https://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
+<p>克隆私有仓库可能报错，参考 <a href="https://stackoverflow.com/questions/68775869/message-support-for-password-authentication-was-removed">Stackoverflow Message</a></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">remote: Support <span class="keyword">for</span> password authentication was removed on August 13, 2021.</span><br><span class="line">remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls <span class="keyword">for</span> information on currently recommended modes of authentication.</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Ubuntu</category>
+      </categories>
+      <tags>
+        <tag>Ubuntu</tag>
+        <tag>Vim</tag>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>重新安装 Ubuntu 24.02 LTS 系统</title>
     <url>/2024/08/19/Ubuntu/Ubuntu_Reinstall/</url>
     <content><![CDATA[<p>由于旧系统崩溃无法开机进入，尝试多种方法无果，因此在双系统下重新安装 Ubuntu 系统。</p>
@@ -1516,6 +1516,52 @@ C --&gt;|Two| E[Result 2]</code></pre>
       </categories>
       <tags>
         <tag>Ubuntu</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Environment Modules 工具管理系统环境</title>
+    <url>/2024/08/22/Ubuntu/Ubuntu_Environment_Modules_System/</url>
+    <content><![CDATA[<p>通过 Modules 工具统一管理系统环境。</p>
+<span id="more"></span>
+<h2 id="编译器多版本切换"><a class="markdownIt-Anchor" href="#编译器多版本切换"></a> 编译器多版本切换</h2>
+<p>通过 <code>apt</code> 安装的编译器如 <code>gcc</code> <code>g++</code> <code>gfortran</code> 等可通过 <code>update-alternatives</code> 工具切换</p>
+<h3 id="gcc"><a class="markdownIt-Anchor" href="#gcc"></a> gcc</h3>
+<h4 id="alias"><a class="markdownIt-Anchor" href="#alias"></a> alias</h4>
+<p>使用 <code>alias</code> 会将 <code>gcc</code> 命令临时映射到对应版本，不会作用于整个系统</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"><span class="built_in">set</span>             version     10.5.0</span><br><span class="line">set-alias       gcc         gcc-10</span><br><span class="line"></span><br><span class="line">conflict    gcc</span><br></pre></td></tr></table></figure>
+<h4 id="update-alternatives"><a class="markdownIt-Anchor" href="#update-alternatives"></a> update-alternatives</h4>
+<p>安装其他 <code>gcc</code> 版本，使用 <code>update-alternatives</code> 工具添加并设置优先级（自动选择高优先级版本）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># install gcc</span></span><br><span class="line"><span class="built_in">sudo</span> apt -y install gcc-10 g++-10</span><br><span class="line"><span class="comment"># add to update-alternatives</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13</span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10</span><br><span class="line"><span class="comment"># manual config</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --config gcc</span><br><span class="line"><span class="comment"># set version</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --<span class="built_in">set</span> gcc /usr/bin/gcc-10</span><br><span class="line"><span class="comment"># remove version</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --remove gcc /usr/bin/gcc-10</span><br></pre></td></tr></table></figure>
+<p>通过 Modules 工具配置，文件结构如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gcc</span><br><span class="line">├── 10.5.0</span><br><span class="line">├── 13.2.0</span><br><span class="line">└── common</span><br></pre></td></tr></table></figure>
+<p>版本 Modules 文件如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"><span class="built_in">set</span> version 10.5.0</span><br><span class="line"><span class="built_in">set</span> moduledir [file <span class="built_in">dirname</span> <span class="variable">$ModulesCurrentModulefile</span>]</span><br><span class="line"><span class="built_in">source</span> <span class="variable">$moduledir</span>/common</span><br></pre></td></tr></table></figure>
+<p>公共执行文件 <code>common</code> 内容如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"></span><br><span class="line">proc ModulesHelp &#123;&#125; &#123;</span><br><span class="line">  puts stderr <span class="string">&quot;gcc $::version&quot;</span></span><br><span class="line">  puts stderr &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span>   scriptroot   /opt/tools/Modules/script/gcc</span><br><span class="line"></span><br><span class="line">module-whatis <span class="string">&quot;load gcc-<span class="variable">$version</span>&quot;</span></span><br><span class="line"></span><br><span class="line">source-sh  bash  <span class="variable">$scriptroot</span>/<span class="variable">$version</span></span><br></pre></td></tr></table></figure>
+<p>shell 脚本内容如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># gcc_version = &quot;10.5.0&quot;</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --<span class="built_in">set</span> gcc /usr/bin/gcc-10</span><br></pre></td></tr></table></figure>
+<h3 id="gfortran"><a class="markdownIt-Anchor" href="#gfortran"></a> gfortran</h3>
+<p>Modules 配置方式与 gcc 基本一致</p>
+<h2 id="python-虚拟环境"><a class="markdownIt-Anchor" href="#python-虚拟环境"></a> python 虚拟环境</h2>
+<p>python pip 直接安装工具会报错：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">error: externally-managed-environment</span><br></pre></td></tr></table></figure>
+<p>该问题可通过创建虚拟环境解决：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 python3-venv</span></span><br><span class="line"><span class="built_in">sudo</span> apt install python3-venv</span><br><span class="line"><span class="comment"># 创建虚拟环境</span></span><br><span class="line"><span class="built_in">mkdir</span> ~/Environment &amp;&amp; <span class="built_in">cd</span> ~/Environment</span><br><span class="line">python3 -m venv python</span><br><span class="line"><span class="comment"># 激活虚拟环境</span></span><br><span class="line"><span class="built_in">source</span> ~/Environment/python/bin/activate</span><br><span class="line"><span class="comment"># 虚拟环境安装</span></span><br><span class="line">pip install xxxxx</span><br><span class="line"><span class="comment"># 退出虚拟环境</span></span><br><span class="line">deactivate</span><br></pre></td></tr></table></figure>
+<p>通过 Modules 工具配置</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span>             version     24.0</span><br><span class="line"><span class="built_in">set</span>             prefix      /path/to/Environment/python</span><br><span class="line"></span><br><span class="line">module-whatis <span class="string">&quot;load python3 virtual environment&quot;</span></span><br><span class="line"></span><br><span class="line">source-sh  bash  <span class="variable">$prefix</span>/bin/activate</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<ol>
+<li><a href="https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-22-04-lts-jammy-jellyfish">How to switch between multiple GCC and G++ compiler versions on Ubuntu 22.04 LTS Jammy Jellyfish</a></li>
+<li><a href="https://fortran-lang.org/en/learn/os_setup/install_gfortran/">Installing GFortran</a></li>
+<li><a href="https://manpages.ubuntu.com/manpages/jammy/en/man1/update-alternatives.1.html">Ubuntu Manuals <em>update-alternatives</em></a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>Ubuntu</category>
+      </categories>
+      <tags>
+        <tag>Ubuntu</tag>
+        <tag>Tool</tag>
       </tags>
   </entry>
 </search>
