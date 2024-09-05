@@ -1146,6 +1146,78 @@ C --&gt;|Two| E[Result 2]</code></pre>
       </tags>
   </entry>
   <entry>
+    <title>Ubuntu 基础设置</title>
+    <url>/2024/08/20/Ubuntu/Ubuntu_Basic_Setting/</url>
+    <content><![CDATA[<p>Ubuntu 基础设置，包括终端、Vim、程序快捷方式、Git等。</p>
+<span id="more"></span>
+<h2 id="主题设置"><a class="markdownIt-Anchor" href="#主题设置"></a> 主题设置</h2>
+<ol>
+<li>修改终端颜色</li>
+<li>修改图标大小</li>
+<li>修改壁纸</li>
+</ol>
+<h2 id="终端设置"><a class="markdownIt-Anchor" href="#终端设置"></a> 终端设置</h2>
+<h3 id="终端路径名称太长"><a class="markdownIt-Anchor" href="#终端路径名称太长"></a> 终端路径名称太长</h3>
+<p>修改配置文件 <code>vim ~/.bashrc</code> 中小写 w 为大写 W，<code>source ~/.bashrc</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$color_prompt</span>&quot;</span> = <span class="built_in">yes</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># PS1=&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ &#x27;</span></span><br><span class="line">    PS1=<span class="string">&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ &#x27;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment"># PS1=&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\w\$ &#x27;</span></span><br><span class="line">    PS1=<span class="string">&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\W\$ &#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<h2 id="vim-设置"><a class="markdownIt-Anchor" href="#vim-设置"></a> Vim 设置</h2>
+<h3 id="显示行号"><a class="markdownIt-Anchor" href="#显示行号"></a> 显示行号</h3>
+<ol>
+<li>临时显示行号 <code>:set number</code> 或者 <code>:set nu</code></li>
+<li>永久显示行号
+<ol>
+<li>查找配置文件 <code>find / -name vimrc 2&gt;&amp;1 | grep -v &quot;Permission denied&quot;</code></li>
+<li>编辑  <code>sudo vim /etc/vimrc</code>，添加 <code>set number</code></li>
+</ol>
+</li>
+</ol>
+<h2 id="程序设置"><a class="markdownIt-Anchor" href="#程序设置"></a> 程序设置</h2>
+<h3 id="软链接"><a class="markdownIt-Anchor" href="#软链接"></a> 软链接</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /path/to/soure/file /path/to/target/file</span><br></pre></td></tr></table></figure>
+<h3 id="桌面快捷方式"><a class="markdownIt-Anchor" href="#桌面快捷方式"></a> 桌面快捷方式</h3>
+<ol>
+<li>打开 application 文件夹</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/share/applications</span><br><span class="line"><span class="built_in">cd</span> ~/.local/share/applications</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>创建应用快捷方式 <code>touch myapp.desktop</code></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Encoding=UTF-8</span><br><span class="line">Name=myapp</span><br><span class="line">Comment=This is my application</span><br><span class="line">Exec=/path/to/myapp</span><br><span class="line">Icon=/path/to/myapp_image.png</span><br><span class="line">Terminal=<span class="literal">false</span></span><br><span class="line">Type=Application</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>增加权限 <code>chmod +x myapp.desktop</code>，注意执行时如果出现闪退，则在终端中直接执行 <code>/path/to/myapp</code> 查看出错信息并修复</li>
+</ol>
+<h2 id="配置-git"><a class="markdownIt-Anchor" href="#配置-git"></a> 配置 Git</h2>
+<h3 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h3>
+<p>安装 Git</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install git</span><br></pre></td></tr></table></figure>
+<p>配置 Git 用户名和邮箱</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name git_name</span><br><span class="line">git config --global user.email git_email@email.com</span><br><span class="line">git config --list</span><br></pre></td></tr></table></figure>
+<p>生成 SSH 密钥，设置默认</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C git_email@email.com</span><br></pre></td></tr></table></figure>
+<p>提示信息</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Your identification has been saved <span class="keyword">in</span> ~/.ssh/id_rsa</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<p>查看公钥内容并复制到 SSH keys 中，在 <code>Github -&gt; Setting -&gt; SSH and GPG keys -&gt; new SSH key</code> 新建key并输入 title 和 key 即可</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<p>检查是否设置成功 <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection">Testing your SSH connection</a>，对比公钥指纹是否一致</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<h3 id="vscode"><a class="markdownIt-Anchor" href="#vscode"></a> VSCode</h3>
+<p>拉取项目 <code>git clone https://github.com/xxxxx.git/</code>，首次可能报错</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/xxxxx.git/&#x27;</span>: gnutls_handshake() failed: The TLS connection was non-properly terminated.</span><br></pre></td></tr></table></figure>
+<p>设置代理或 gnutls 包原因 <a href="https://askubuntu.com/questions/186847/error-gnutls-handshake-failed-when-connecting-to-https-servers">Ubuntu error: gnutls_handshake()</a>，后者可采用 <code>openssl</code> 编译或更换更为稳定的代理</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.https://github.com.proxy http://127.0.0.1:7890</span><br><span class="line">git config --global https.https://github.com.proxy https://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
+<p>克隆私有仓库可能报错，参考 <a href="https://stackoverflow.com/questions/68775869/message-support-for-password-authentication-was-removed">Stackoverflow Message</a></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">remote: Support <span class="keyword">for</span> password authentication was removed on August 13, 2021.</span><br><span class="line">remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls <span class="keyword">for</span> information on currently recommended modes of authentication.</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Ubuntu</category>
+      </categories>
+      <tags>
+        <tag>Ubuntu</tag>
+        <tag>Vim</tag>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ubuntu 24.02 安装配置 Environment Modules 工具</title>
     <url>/2024/08/20/Ubuntu/Ubuntu_Environment_Modules/</url>
     <content><![CDATA[<p>Environment Modules 是一种简化的 Shell 初始化工具，可用于修改终端环境。</p>
@@ -1369,75 +1441,69 @@ C --&gt;|Two| E[Result 2]</code></pre>
       </tags>
   </entry>
   <entry>
-    <title>Ubuntu 基础设置</title>
-    <url>/2024/08/20/Ubuntu/Ubuntu_Basic_Setting/</url>
-    <content><![CDATA[<p>Ubuntu 基础设置，包括终端、Vim、程序快捷方式、Git等。</p>
+    <title>Environment Modules 工具管理系统环境</title>
+    <url>/2024/08/22/Ubuntu/Ubuntu_Environment_Modules_System/</url>
+    <content><![CDATA[<p>通过 Modules 工具统一管理系统环境。</p>
 <span id="more"></span>
-<h2 id="主题设置"><a class="markdownIt-Anchor" href="#主题设置"></a> 主题设置</h2>
+<h2 id="编译器多版本切换"><a class="markdownIt-Anchor" href="#编译器多版本切换"></a> 编译器多版本切换</h2>
+<p>通过 <code>apt</code> 安装的编译器如 <code>gcc</code> <code>g++</code> <code>gfortran</code> 等可通过 <code>update-alternatives</code> 工具切换</p>
+<h3 id="gcc"><a class="markdownIt-Anchor" href="#gcc"></a> gcc</h3>
+<h4 id="alias"><a class="markdownIt-Anchor" href="#alias"></a> alias</h4>
+<p>使用 <code>alias</code> 会将 <code>gcc</code> 命令临时映射到对应版本，不会作用于整个系统</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"><span class="built_in">set</span>             version     10.5.0</span><br><span class="line">set-alias       gcc         gcc-10</span><br><span class="line"></span><br><span class="line">conflict    gcc</span><br></pre></td></tr></table></figure>
+<h4 id="update-alternatives"><a class="markdownIt-Anchor" href="#update-alternatives"></a> update-alternatives</h4>
+<p>安装其他 <code>gcc</code> 版本，使用 <code>update-alternatives</code> 工具添加并设置优先级（自动选择高优先级版本）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># install gcc</span></span><br><span class="line"><span class="built_in">sudo</span> apt -y install gcc-10 g++-10</span><br><span class="line"><span class="comment"># add to update-alternatives</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13</span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10</span><br><span class="line"><span class="comment"># manual config</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --config gcc</span><br><span class="line"><span class="comment"># set version</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --<span class="built_in">set</span> gcc /usr/bin/gcc-10</span><br><span class="line"><span class="comment"># remove version</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --remove gcc /usr/bin/gcc-10</span><br></pre></td></tr></table></figure>
+<p>通过 Modules 工具配置，文件结构如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gcc</span><br><span class="line">├── 10.5.0</span><br><span class="line">├── 13.2.0</span><br><span class="line">└── common</span><br></pre></td></tr></table></figure>
+<p>版本 Modules 文件如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"><span class="built_in">set</span> version 10.5.0</span><br><span class="line"><span class="built_in">set</span> moduledir [file <span class="built_in">dirname</span> <span class="variable">$ModulesCurrentModulefile</span>]</span><br><span class="line"><span class="built_in">source</span> <span class="variable">$moduledir</span>/common</span><br></pre></td></tr></table></figure>
+<p>公共执行文件 <code>common</code> 内容如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"></span><br><span class="line">proc ModulesHelp &#123;&#125; &#123;</span><br><span class="line">  puts stderr <span class="string">&quot;gcc $::version&quot;</span></span><br><span class="line">  puts stderr &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span>   scriptroot   /opt/tools/Modules/script/gcc</span><br><span class="line"></span><br><span class="line">module-whatis <span class="string">&quot;load gcc-<span class="variable">$version</span>&quot;</span></span><br><span class="line"></span><br><span class="line">source-sh  bash  <span class="variable">$scriptroot</span>/<span class="variable">$version</span></span><br></pre></td></tr></table></figure>
+<p>shell 脚本内容如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># gcc_version = &quot;10.5.0&quot;</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --<span class="built_in">set</span> gcc /usr/bin/gcc-10</span><br></pre></td></tr></table></figure>
+<h3 id="gfortran"><a class="markdownIt-Anchor" href="#gfortran"></a> gfortran</h3>
+<p>Modules 配置方式与 gcc 基本一致</p>
+<h2 id="python-虚拟环境"><a class="markdownIt-Anchor" href="#python-虚拟环境"></a> python 虚拟环境</h2>
+<p>python pip 直接安装工具会报错：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">error: externally-managed-environment</span><br></pre></td></tr></table></figure>
+<p>该问题可通过创建虚拟环境解决：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 python3-venv</span></span><br><span class="line"><span class="built_in">sudo</span> apt install python3-venv</span><br><span class="line"><span class="comment"># 创建虚拟环境</span></span><br><span class="line"><span class="built_in">mkdir</span> ~/Environment &amp;&amp; <span class="built_in">cd</span> ~/Environment</span><br><span class="line">python3 -m venv python</span><br><span class="line"><span class="comment"># 激活虚拟环境</span></span><br><span class="line"><span class="built_in">source</span> ~/Environment/python/bin/activate</span><br><span class="line"><span class="comment"># 虚拟环境安装</span></span><br><span class="line">pip install xxxxx</span><br><span class="line"><span class="comment"># 退出虚拟环境</span></span><br><span class="line">deactivate</span><br></pre></td></tr></table></figure>
+<p>通过 Modules 工具配置</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span>             version     24.0</span><br><span class="line"><span class="built_in">set</span>             prefix      /path/to/Environment/python</span><br><span class="line"></span><br><span class="line">module-whatis <span class="string">&quot;load python3 virtual environment&quot;</span></span><br><span class="line"></span><br><span class="line">source-sh  bash  <span class="variable">$prefix</span>/bin/activate</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
 <ol>
-<li>修改终端颜色</li>
-<li>修改图标大小</li>
-<li>修改壁纸</li>
+<li><a href="https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-22-04-lts-jammy-jellyfish">How to switch between multiple GCC and G++ compiler versions on Ubuntu 22.04 LTS Jammy Jellyfish</a></li>
+<li><a href="https://fortran-lang.org/en/learn/os_setup/install_gfortran/">Installing GFortran</a></li>
+<li><a href="https://manpages.ubuntu.com/manpages/jammy/en/man1/update-alternatives.1.html">Ubuntu Manuals <em>update-alternatives</em></a></li>
 </ol>
-<h2 id="终端设置"><a class="markdownIt-Anchor" href="#终端设置"></a> 终端设置</h2>
-<h3 id="终端路径名称太长"><a class="markdownIt-Anchor" href="#终端路径名称太长"></a> 终端路径名称太长</h3>
-<p>修改配置文件 <code>vim ~/.bashrc</code> 中小写 w 为大写 W，<code>source ~/.bashrc</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$color_prompt</span>&quot;</span> = <span class="built_in">yes</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># PS1=&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ &#x27;</span></span><br><span class="line">    PS1=<span class="string">&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ &#x27;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment"># PS1=&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\w\$ &#x27;</span></span><br><span class="line">    PS1=<span class="string">&#x27;$&#123;debian_chroot:+($debian_chroot)&#125;\u@\h:\W\$ &#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-<h2 id="vim-设置"><a class="markdownIt-Anchor" href="#vim-设置"></a> Vim 设置</h2>
-<h3 id="显示行号"><a class="markdownIt-Anchor" href="#显示行号"></a> 显示行号</h3>
-<ol>
-<li>临时显示行号 <code>:set number</code> 或者 <code>:set nu</code></li>
-<li>永久显示行号
-<ol>
-<li>查找配置文件 <code>find / -name vimrc 2&gt;&amp;1 | grep -v &quot;Permission denied&quot;</code></li>
-<li>编辑  <code>sudo vim /etc/vimrc</code>，添加 <code>set number</code></li>
-</ol>
-</li>
-</ol>
-<h2 id="程序设置"><a class="markdownIt-Anchor" href="#程序设置"></a> 程序设置</h2>
-<h3 id="软链接"><a class="markdownIt-Anchor" href="#软链接"></a> 软链接</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /path/to/soure/file /path/to/target/file</span><br></pre></td></tr></table></figure>
-<h3 id="桌面快捷方式"><a class="markdownIt-Anchor" href="#桌面快捷方式"></a> 桌面快捷方式</h3>
-<ol>
-<li>打开 application 文件夹</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/share/applications</span><br><span class="line"><span class="built_in">cd</span> ~/.local/share/applications</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>创建应用快捷方式 <code>touch myapp.desktop</code></li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Encoding=UTF-8</span><br><span class="line">Name=myapp</span><br><span class="line">Comment=This is my application</span><br><span class="line">Exec=/path/to/myapp</span><br><span class="line">Icon=/path/to/myapp_image.png</span><br><span class="line">Terminal=<span class="literal">false</span></span><br><span class="line">Type=Application</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>增加权限 <code>chmod +x myapp.desktop</code>，注意执行时如果出现闪退，则在终端中直接执行 <code>/path/to/myapp</code> 查看出错信息并修复</li>
-</ol>
-<h2 id="配置-git"><a class="markdownIt-Anchor" href="#配置-git"></a> 配置 Git</h2>
-<h3 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h3>
-<p>安装 Git</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install git</span><br></pre></td></tr></table></figure>
-<p>配置 Git 用户名和邮箱</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name git_name</span><br><span class="line">git config --global user.email git_email@email.com</span><br><span class="line">git config --list</span><br></pre></td></tr></table></figure>
-<p>生成 SSH 密钥，设置默认</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C git_email@email.com</span><br></pre></td></tr></table></figure>
-<p>提示信息</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Your identification has been saved <span class="keyword">in</span> ~/.ssh/id_rsa</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-<p>查看公钥内容并复制到 SSH keys 中，在 <code>Github -&gt; Setting -&gt; SSH and GPG keys -&gt; new SSH key</code> 新建key并输入 title 和 key 即可</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-<p>检查是否设置成功 <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection">Testing your SSH connection</a>，对比公钥指纹是否一致</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-<h3 id="vscode"><a class="markdownIt-Anchor" href="#vscode"></a> VSCode</h3>
-<p>拉取项目 <code>git clone https://github.com/xxxxx.git/</code>，首次可能报错</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/xxxxx.git/&#x27;</span>: gnutls_handshake() failed: The TLS connection was non-properly terminated.</span><br></pre></td></tr></table></figure>
-<p>设置代理或 gnutls 包原因 <a href="https://askubuntu.com/questions/186847/error-gnutls-handshake-failed-when-connecting-to-https-servers">Ubuntu error: gnutls_handshake()</a>，后者可采用 <code>openssl</code> 编译或更换更为稳定的代理</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.https://github.com.proxy http://127.0.0.1:7890</span><br><span class="line">git config --global https.https://github.com.proxy https://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
-<p>克隆私有仓库可能报错，参考 <a href="https://stackoverflow.com/questions/68775869/message-support-for-password-authentication-was-removed">Stackoverflow Message</a></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">remote: Support <span class="keyword">for</span> password authentication was removed on August 13, 2021.</span><br><span class="line">remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls <span class="keyword">for</span> information on currently recommended modes of authentication.</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Ubuntu</category>
       </categories>
       <tags>
         <tag>Ubuntu</tag>
-        <tag>Vim</tag>
-        <tag>Git</tag>
+        <tag>Tool</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ubuntu 基础设置</title>
+    <url>/2024/09/05/Ubuntu/Ubuntu_Questions/</url>
+    <content><![CDATA[<p>记录 Ubuntu 系统常见问题及解决方案</p>
+<span id="more"></span>
+<h2 id="ubuntu安装nvidia驱动"><a class="markdownIt-Anchor" href="#ubuntu安装nvidia驱动"></a> Ubuntu安装Nvidia驱动</h2>
+<ul>
+<li>未禁用 Nouveau 仍正常安装</li>
+<li>更新 GCC</li>
+<li>页面变黄</li>
+</ul>
+<p><a href="https://www.cnblogs.com/Leozi/p/13281224.html">Ubuntu下安装NVIDIA驱动的三种方法 [博客园]</a></p>
+]]></content>
+      <categories>
+        <category>Ubuntu</category>
+      </categories>
+      <tags>
+        <tag>Ubuntu</tag>
       </tags>
   </entry>
   <entry>
@@ -1519,49 +1585,850 @@ C --&gt;|Two| E[Result 2]</code></pre>
       </tags>
   </entry>
   <entry>
-    <title>Environment Modules 工具管理系统环境</title>
-    <url>/2024/08/22/Ubuntu/Ubuntu_Environment_Modules_System/</url>
-    <content><![CDATA[<p>通过 Modules 工具统一管理系统环境。</p>
+    <title>VSCode 基础功能</title>
+    <url>/2024/09/05/VSCode/VSCode_Basic/</url>
+    <content><![CDATA[<p>VScode下载，安装，编辑，搜索等功能介绍</p>
 <span id="more"></span>
-<h2 id="编译器多版本切换"><a class="markdownIt-Anchor" href="#编译器多版本切换"></a> 编译器多版本切换</h2>
-<p>通过 <code>apt</code> 安装的编译器如 <code>gcc</code> <code>g++</code> <code>gfortran</code> 等可通过 <code>update-alternatives</code> 工具切换</p>
-<h3 id="gcc"><a class="markdownIt-Anchor" href="#gcc"></a> gcc</h3>
-<h4 id="alias"><a class="markdownIt-Anchor" href="#alias"></a> alias</h4>
-<p>使用 <code>alias</code> 会将 <code>gcc</code> 命令临时映射到对应版本，不会作用于整个系统</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"><span class="built_in">set</span>             version     10.5.0</span><br><span class="line">set-alias       gcc         gcc-10</span><br><span class="line"></span><br><span class="line">conflict    gcc</span><br></pre></td></tr></table></figure>
-<h4 id="update-alternatives"><a class="markdownIt-Anchor" href="#update-alternatives"></a> update-alternatives</h4>
-<p>安装其他 <code>gcc</code> 版本，使用 <code>update-alternatives</code> 工具添加并设置优先级（自动选择高优先级版本）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># install gcc</span></span><br><span class="line"><span class="built_in">sudo</span> apt -y install gcc-10 g++-10</span><br><span class="line"><span class="comment"># add to update-alternatives</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13</span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10</span><br><span class="line"><span class="comment"># manual config</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --config gcc</span><br><span class="line"><span class="comment"># set version</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --<span class="built_in">set</span> gcc /usr/bin/gcc-10</span><br><span class="line"><span class="comment"># remove version</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --remove gcc /usr/bin/gcc-10</span><br></pre></td></tr></table></figure>
-<p>通过 Modules 工具配置，文件结构如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gcc</span><br><span class="line">├── 10.5.0</span><br><span class="line">├── 13.2.0</span><br><span class="line">└── common</span><br></pre></td></tr></table></figure>
-<p>版本 Modules 文件如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"><span class="built_in">set</span> version 10.5.0</span><br><span class="line"><span class="built_in">set</span> moduledir [file <span class="built_in">dirname</span> <span class="variable">$ModulesCurrentModulefile</span>]</span><br><span class="line"><span class="built_in">source</span> <span class="variable">$moduledir</span>/common</span><br></pre></td></tr></table></figure>
-<p>公共执行文件 <code>common</code> 内容如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"></span><br><span class="line">proc ModulesHelp &#123;&#125; &#123;</span><br><span class="line">  puts stderr <span class="string">&quot;gcc $::version&quot;</span></span><br><span class="line">  puts stderr &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span>   scriptroot   /opt/tools/Modules/script/gcc</span><br><span class="line"></span><br><span class="line">module-whatis <span class="string">&quot;load gcc-<span class="variable">$version</span>&quot;</span></span><br><span class="line"></span><br><span class="line">source-sh  bash  <span class="variable">$scriptroot</span>/<span class="variable">$version</span></span><br></pre></td></tr></table></figure>
-<p>shell 脚本内容如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># gcc_version = &quot;10.5.0&quot;</span></span><br><span class="line"><span class="built_in">sudo</span> update-alternatives --<span class="built_in">set</span> gcc /usr/bin/gcc-10</span><br></pre></td></tr></table></figure>
-<h3 id="gfortran"><a class="markdownIt-Anchor" href="#gfortran"></a> gfortran</h3>
-<p>Modules 配置方式与 gcc 基本一致</p>
-<h2 id="python-虚拟环境"><a class="markdownIt-Anchor" href="#python-虚拟环境"></a> python 虚拟环境</h2>
-<p>python pip 直接安装工具会报错：</p>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">error: externally-managed-environment</span><br></pre></td></tr></table></figure>
-<p>该问题可通过创建虚拟环境解决：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 python3-venv</span></span><br><span class="line"><span class="built_in">sudo</span> apt install python3-venv</span><br><span class="line"><span class="comment"># 创建虚拟环境</span></span><br><span class="line"><span class="built_in">mkdir</span> ~/Environment &amp;&amp; <span class="built_in">cd</span> ~/Environment</span><br><span class="line">python3 -m venv python</span><br><span class="line"><span class="comment"># 激活虚拟环境</span></span><br><span class="line"><span class="built_in">source</span> ~/Environment/python/bin/activate</span><br><span class="line"><span class="comment"># 虚拟环境安装</span></span><br><span class="line">pip install xxxxx</span><br><span class="line"><span class="comment"># 退出虚拟环境</span></span><br><span class="line">deactivate</span><br></pre></td></tr></table></figure>
-<p>通过 Modules 工具配置</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span>             version     24.0</span><br><span class="line"><span class="built_in">set</span>             prefix      /path/to/Environment/python</span><br><span class="line"></span><br><span class="line">module-whatis <span class="string">&quot;load python3 virtual environment&quot;</span></span><br><span class="line"></span><br><span class="line">source-sh  bash  <span class="variable">$prefix</span>/bin/activate</span><br></pre></td></tr></table></figure>
-<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<h2 id="vscode基础功能"><a class="markdownIt-Anchor" href="#vscode基础功能"></a> VSCode基础功能</h2>
+<pre><code class="highlight mermaid">flowchart LR
+
+  1(VSCode)
+    2.1[Monaco Editor]
+      3.1.1[Setting]
+        4.1.1.1[JSON]
+        4.1.1.2[UI]
+      3.1.2[Shortcut]
+      3.1.3[Snippets]
+      3.1.4[Search]
+      3.1.5[Command]
+    2.2[Component]
+      3.2.1[Extension]
+        4.2.1.1[Modern Fortran]
+      3.2.2[LSP-Language Server Protocol]
+        4.2.2.1[Fortls-Fortran language servers]
+      3.2.3[DAP-Debug Adapter Protocol]
+    2.3[CodeSpaces]
+      3.3.1[IntelliCode]
+      3.3.2[Git]
+      3.3.3[Live Share]
+    2.4[Compile]
+      3.4.1[Terminal]
+      3.4.2[Debugger]
+      3.4.3[Task]
+
+  1 --&gt; 2.1
+  1 --&gt; 2.2
+  1 --&gt; 2.3
+  1 --&gt; 2.4
+
+  2.1 --&gt; 3.1.1
+  2.1 --&gt; 3.1.2
+  2.1 --&gt; 3.1.3
+  2.1 --&gt; 3.1.4
+  2.1 --&gt; 3.1.5
+
+  2.2 --&gt; 3.2.1
+  2.2 --&gt; 3.2.2
+  2.2 --&gt; 3.2.3
+
+  2.3 --&gt; 3.3.1
+  2.3 --&gt; 3.3.2
+  2.3 --&gt; 3.3.3
+
+  2.4 --&gt; 3.4.1
+  2.4 --&gt; 3.4.2
+  2.4 --&gt; 3.4.3
+
+  3.1.1 --&gt; 4.1.1.1
+  3.1.1 --&gt; 4.1.1.2
+
+  3.2.1 --&gt; 4.2.1.1
+  3.2.2 --&gt; 4.2.2.1</code></pre>
+<h3 id="下载"><a class="markdownIt-Anchor" href="#下载"></a> 下载</h3>
+<ul>
+<li>VSCode 官网下载速度很慢，可修改下载地址为国内镜像地址
+<ul>
+<li>官网下载地址： [<a href="https://az764295.vo.msecnd.net">https://az764295.vo.msecnd.net</a>]</li>
+<li>国内镜像地址： [<a href="https://vscode.cdn.azure.cn">https://vscode.cdn.azure.cn</a>]</li>
+</ul>
+</li>
+<li>以当前版本为例
+<ul>
+<li>默认下载地址为：
+<ul>
+<li>[<a href="https://az764295.vo.msecnd.net/stable/ee2b180d582a7f601fa6ecfdad8d9fd269ab1884/VSCodeUserSetup-x64-1.76.2.exe">https://az764295.vo.msecnd.net/stable/ee2b180d582a7f601fa6ecfdad8d9fd269ab1884/VSCodeUserSetup-x64-1.76.2.exe</a>]</li>
+</ul>
+</li>
+<li>修改为：
+<ul>
+<li>[<a href="https://vscode.cdn.azure.cn/stable/ee2b180d582a7f601fa6ecfdad8d9fd269ab1884/VSCodeUserSetup-x64-1.76.2.exe">https://vscode.cdn.azure.cn/stable/ee2b180d582a7f601fa6ecfdad8d9fd269ab1884/VSCodeUserSetup-x64-1.76.2.exe</a>]</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="插件"><a class="markdownIt-Anchor" href="#插件"></a> 插件</h3>
+<ul>
+<li>中文插件 <code>Chinese (Simplified) (简体中文) Language Pack for Visual Studio Code</code></li>
+<li>主题插件 — 2022年流行 VSCode 主题排行榜 [<a href="https://zhuanlan.zhihu.com/p/553669477">https://zhuanlan.zhihu.com/p/553669477</a>]</li>
+</ul>
+<h3 id="设置"><a class="markdownIt-Anchor" href="#设置"></a> 设置</h3>
+<ul>
+<li><code>末尾添加新行</code></li>
+</ul>
+<div class="group-picture"><div class="group-picture-row"><div class="group-picture-column"><img src="/images/VScodeFortran/vscode%20setting%20-%20insert%20final%20newline.JPG" alt="末尾添加新行" /></div></div></div>
+<ul>
+<li><code>删除行末空格</code></li>
+</ul>
+<p><img src="/images/VScodeFortran/vscode%20setting%20-%20trim%20trailing%20whitespace.JPG" alt="删除行末空格" /></p>
+<ul>
+<li>取消 <code>活动代码块禁止建议</code> 选项</li>
+</ul>
+<p><img src="/images/VScodeFortran/Snippets%20Prevent%20Quick%20Suggestions.JPG" alt="活动代码块禁止建议" /></p>
+<h3 id="搜索替换"><a class="markdownIt-Anchor" href="#搜索替换"></a> 搜索替换</h3>
+<ul>
+<li>vscode搜索支持
+<ul>
+<li>局部搜索/全局搜索</li>
+<li>大小写匹配 <code>Match Case</code></li>
+<li>整词匹配 <code>Match whole word</code></li>
+<li>正则表达式 <code>Regular expression</code></li>
+<li>文件筛选
+<ul>
+<li>包含文件类型 <code>file to include</code></li>
+<li>剔除文件类型 <code>file to exclude</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>vscode替换支持
+<ul>
+<li>逐词替换 <code>Replace</code></li>
+<li>全局替换 <code>Replace All</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="快捷键"><a class="markdownIt-Anchor" href="#快捷键"></a> 快捷键</h3>
+<ul>
+<li>
+<p>全部快捷键查看菜单栏 <code>Help &gt; Keyboard Shortcut Reference</code> 或快捷键 <code>Ctrl + K + R</code></p>
+</li>
+<li>
+<p>快捷键组合</p>
+<ul>
+<li><code>Ctrl +</code></li>
+<li><code>Ctrl + Shift</code></li>
+<li><code>Alt +</code></li>
+<li><code>Alt + Shift</code></li>
+<li><code>Ctrl + Alt +</code></li>
+<li><code>Ctrl + K +</code></li>
+<li><code>F1 - F12</code></li>
+</ul>
+</li>
+<li>
+<p>常用快捷键</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">快捷键</th>
+<th style="text-align:left">功能</th>
+<th style="text-align:left">快捷键</th>
+<th style="text-align:left">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>Ctrl + P</code></td>
+<td style="text-align:left">搜索文件</td>
+<td style="text-align:left"><code>Ctrl + Shift + P</code></td>
+<td style="text-align:left">打开命令行</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + L</code></td>
+<td style="text-align:left">选中行</td>
+<td style="text-align:left"><code>Ctrl + Backspace</code></td>
+<td style="text-align:left">整词删除/向左</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + D</code></td>
+<td style="text-align:left">向下复制行</td>
+<td style="text-align:left"><code>Ctrl + Delete</code></td>
+<td style="text-align:left">整词删除/向右</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + X</code></td>
+<td style="text-align:left">剪切/行</td>
+<td style="text-align:left"><code>Ctrl + LeftArrow</code></td>
+<td style="text-align:left">光标整词移动</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + C</code></td>
+<td style="text-align:left">复制/行</td>
+<td style="text-align:left"><code>Alt + LeftArrow</code></td>
+<td style="text-align:left">向前跳转</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + V</code></td>
+<td style="text-align:left">粘贴/行</td>
+<td style="text-align:left"><code>Alt + RightArrow</code></td>
+<td style="text-align:left">向后跳转</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + Z</code></td>
+<td style="text-align:left">undo</td>
+<td style="text-align:left"><code>Alt + UpArrow</code></td>
+<td style="text-align:left">向上移动</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + Y</code></td>
+<td style="text-align:left">redo</td>
+<td style="text-align:left"><code>Alt + DownArrow</code></td>
+<td style="text-align:left">向下移动</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Alt + click</code></td>
+<td style="text-align:left">多光标选择</td>
+<td style="text-align:left"><code>Alt + shift + click</code></td>
+<td style="text-align:left">多行多光标选择</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + N</code></td>
+<td style="text-align:left">创建新文件</td>
+<td style="text-align:left"><code>Ctrl + Enter</code></td>
+<td style="text-align:left">向下新增行</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + S</code></td>
+<td style="text-align:left">保存</td>
+<td style="text-align:left"><code>Ctrl + Shift + Enter</code></td>
+<td style="text-align:left">向上新增行</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + F</code></td>
+<td style="text-align:left">查找</td>
+<td style="text-align:left"><code>Ctrl + shift + F</code></td>
+<td style="text-align:left">全局查找</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + H</code></td>
+<td style="text-align:left">替换</td>
+<td style="text-align:left"><code>Ctrl + shift + H</code></td>
+<td style="text-align:left">全局替换</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + A</code></td>
+<td style="text-align:left">全选</td>
+<td style="text-align:left"><code>Ctrl + Shift + U</code></td>
+<td style="text-align:left">大写（uppercase）</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>F2</code></td>
+<td style="text-align:left">修改变量</td>
+<td style="text-align:left"><code>Ctrl + Shift + L</code></td>
+<td style="text-align:left">小写（lowercase）</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>F12</code></td>
+<td style="text-align:left">查看定义</td>
+<td style="text-align:left"><code>Shift + F12</code></td>
+<td style="text-align:left">查看函数调用</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + /</code></td>
+<td style="text-align:left">注释</td>
+<td style="text-align:left"><code>Shift + Alt + A</code></td>
+<td style="text-align:left">块注释</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>备注
+<ul>
+<li>向下复制原快捷键为 <code>Shift + Alt + DownArrow</code></li>
+<li>大小写转换快捷键需自定义</li>
+<li>注意是否与系统/输入法快捷键冲突</li>
+</ul>
+</li>
+</ul>
+<h3 id="代码块"><a class="markdownIt-Anchor" href="#代码块"></a> 代码块</h3>
 <ol>
-<li><a href="https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-22-04-lts-jammy-jellyfish">How to switch between multiple GCC and G++ compiler versions on Ubuntu 22.04 LTS Jammy Jellyfish</a></li>
-<li><a href="https://fortran-lang.org/en/learn/os_setup/install_gfortran/">Installing GFortran</a></li>
-<li><a href="https://manpages.ubuntu.com/manpages/jammy/en/man1/update-alternatives.1.html">Ubuntu Manuals <em>update-alternatives</em></a></li>
+<li>通过 <code>Ctrl + Shift + P</code> 输入 <code>Snippets</code></li>
+<li>选择代码块语言，如 <code>FortranFreeForm.json</code></li>
+<li>编写代码块
+<ul>
+<li>模板</li>
+</ul>
+</li>
 </ol>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;Print to console&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;prefix&quot;</span><span class="punctuation">:</span> <span class="string">&quot;log&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;body&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;console.log(&#x27;$1&#x27;);&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;$2&quot;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Log output to console&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>例：创建 <code>select</code> 代码块</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;Select Case&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;prefix&quot;</span><span class="punctuation">:</span> <span class="string">&quot;select case&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;body&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;select case ($&#123;1:expression&#125;)&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;case ($&#123;2:selection1&#125;)&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;  $&#123;3:statement&#125;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;case default&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;  $&#123;4:statement&#125;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;end select&quot;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Select Case Snippet.&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="命令行"><a class="markdownIt-Anchor" href="#命令行"></a> 命令行</h3>
+<ul>
+<li>Breadcrumbs导航</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">快捷键</th>
+<th style="text-align:left">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>Ctrl + E</code> <code>Ctrl + P</code></td>
+<td style="text-align:left">命令行搜索文件</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + Shift + P</code> <code>F1</code></td>
+<td style="text-align:left">打开命令行 <code>&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + G</code></td>
+<td style="text-align:left">跳转至行/列 <code>:</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + T</code></td>
+<td style="text-align:left">跳转至符号/整个项目 <code>#</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Ctrl + Shift + O</code></td>
+<td style="text-align:left">跳转至符号/当前文件 <code>@</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="代码对比"><a class="markdownIt-Anchor" href="#代码对比"></a> 代码对比</h3>
+<ul>
+<li>在侧边栏选择对比文件1右键 <code>Select for compare</code></li>
+<li>选择对比文件2右键 <code>Compare with selected</code></li>
+</ul>
+<hr />
 ]]></content>
       <categories>
-        <category>Ubuntu</category>
+        <category>VSCode</category>
+      </categories>
+      <tags>
+        <tag>VSCode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>VSCode 配置 Fortran 开发环境</title>
+    <url>/2024/09/05/VSCode/VSCode_Fortran/</url>
+    <content><![CDATA[<p>VSCode安装Modern Fortran插件及Fortls</p>
+<span id="more"></span>
+<div class="note warning"><p>下文中部分图片源于 <a href="https://marketplace.visualstudio.com/items?itemName=fortran-lang.linter-gfortran&amp;ssr=false#overview">Modern Fortran - VSCode Marketplace</a> 及 <a href="https://fortls.fortran-lang.org/">fortls - Language Server for Fortran</a></p>
+</div>
+<h2 id="vscode"><a class="markdownIt-Anchor" href="#vscode"></a> VSCode</h2>
+<p>VSCode下载，插件，编辑等基础功能参考 <a href="../VSCode_Basic/index.html">VSCode基础功能</a></p>
+<h2 id="modern-fortran插件"><a class="markdownIt-Anchor" href="#modern-fortran插件"></a> Modern Fortran插件</h2>
+<ul>
+<li>具体帮助查看 <a href="https://marketplace.visualstudio.com/items?itemName=fortran-lang.linter-gfortran&amp;ssr=false#overview">Modern Fortran - VSCode Marketplace</a></li>
+<li>主要功能包括
+<ul>
+<li>语法突出显示</li>
+<li>集成 <code>fortls</code>，支持 <code>GoTo, Find, Peek, Hover, Auto-completion</code></li>
+<li>静态代码检查 (<code>Linting</code>)，支持 <code>gfortran, ifort, nagfor</code></li>
+<li>代码格式化 <code>findent, fprettify</code></li>
+<li>代码块 <code>snippets</code></li>
+<li>代码调试，支持断点、多线程调试、调用堆栈、步进</li>
+</ul>
+</li>
+<li>该插件依赖 <code>Cpp</code> 基础插件 <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools">C/C++</a></li>
+</ul>
+<h3 id="静态代码检查"><a class="markdownIt-Anchor" href="#静态代码检查"></a> 静态代码检查</h3>
+<ul>
+<li>指定静态代码检查编译器及其路径</li>
+</ul>
+<p><img src="/images/VScodeFortran/linter%20setting.png" alt="静态代码检查编译器设置" /></p>
+<ul>
+<li>Linting 可以在撰写代码时进行编译器错误和警告检测，无需编译代码</li>
+</ul>
+<p><img src="/images/VScodeFortran/lint-demo.gif" alt="静态代码检查" /></p>
+<hr />
+<h2 id="fortls"><a class="markdownIt-Anchor" href="#fortls"></a> Fortls</h2>
+<h3 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h3>
+<ul>
+<li>
+<p>主页 [<a href="https://fortls.fortran-lang.org/">https://fortls.fortran-lang.org/</a>]</p>
+</li>
+<li>
+<p><code>Fortran language servers</code> 早期基于 <code>Language Server Protocol (LSP)</code> 项目开发</p>
+</li>
+<li>
+<p><code>fortls</code> 依赖 <code>python 3.7+</code> 环境</p>
+</li>
+<li>
+<p>在线安装</p>
+<ul>
+<li>直接使用安装命令 <code>pip install fortls</code></li>
+<li>安装完成后在 <code>python</code> 数据路径的脚本 <code>C:\Users\UserName\AppData\Roaming\Python\Python39\Scripts</code> 目录下出现可执行文件 <code>fortls.exe</code></li>
+<li>将其所在路径 <code>C:\Users\UserName\AppData\Roaming\Python\Python39\Scripts\fortls.exe</code> 添加至 <code>Modern Fortran</code> 插件设置中</li>
+</ul>
+</li>
+<li>
+<p>离线安装</p>
+<ul>
+<li>下载安装包 [<a href="https://github.com/fortran-lang/fortls">https://github.com/fortran-lang/fortls</a>]</li>
+<li>通过 <code>python</code> 命令将程序安装到环境中 <code>python setup.py install</code></li>
+<li>安装成功后在 <code>python</code> 安装路径的 <code>..\Python39_64\Scripts</code> 目录下出现可执行文件 <code>fortls.exe</code></li>
+<li>将其所在路径添加至 <code>Modern Fortran</code> 插件设置中</li>
+</ul>
+</li>
+<li>
+<p>除 <code>vscode</code> 外，<code>fortls</code> 还支持 <code>Atom, Sublime Text, neovim, Vim, EMACS, Visual Studio 2017, Kakoune</code> 等编辑器，参考 [<a href="https://fortls.fortran-lang.org/editor_integration.html">https://fortls.fortran-lang.org/editor_integration.html</a>]</p>
+<ul>
+<li><code>VS2017</code> 配置需安装扩展插件 [<a href="https://github.com/michaelkonecny/vs-fortran-ls-client">https://github.com/michaelkonecny/vs-fortran-ls-client</a>]</li>
+</ul>
+</li>
+<li>
+<p>指定 mod 文件输出路径</p>
+</li>
+</ul>
+<p><img src="/images/VScodeFortran/fortls-mod-output.png" alt="指定 mod 文件输出路径" /></p>
+<h3 id="功能"><a class="markdownIt-Anchor" href="#功能"></a> 功能</h3>
+<ul>
+<li>Auto-Completion
+<ul>
+<li>IntelliSense功能之一，编写代码时可自动实现代码提示和补全</li>
+<li>支持类型包括 <code>变量、函数、子程序、类、接口、模块、代码块</code> 等</li>
+<li>VSCode IntelliCode功能可基于AI推荐最可能匹配的代码提示</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/VScodeFortran/completion-ani.gif" alt="自动补全演示" /></p>
+<ul>
+<li>Hover
+<ul>
+<li>悬停预览，鼠标悬停在 变量/函数等 符号上时会出现提示信息</li>
+<li>提示信息基于 <code>Doxygen</code> 和 <code>FORD</code> 文档样式生成，见 <a href="#%E6%B3%A8%E9%87%8A%E6%A0%BC%E5%BC%8F">注释格式</a></li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/VScodeFortran/hover2.png" alt="悬停演示" /></p>
+<ul>
+<li>
+<p>Rename</p>
+<ul>
+<li>选择 变量 后按快捷键 <code>F2</code> 可修改变量名</li>
+<li><code>fortls</code> 会自动识别变量定义范围</li>
+</ul>
+</li>
+<li>
+<p>Symbols</p>
+<ul>
+<li>指模块、子程序、函数、类等</li>
+<li>在整个文档中搜索符号并显示在侧边栏 <code>outline</code> 中</li>
+<li>支持 查找定义 <code>Definition</code> 实现 <code>implementation</code> 引用 <code>Reference</code></li>
+<li>支持 内联编辑器 <code>Peek</code></li>
+<li>使用快捷键 <code>Alt + Shift + F12</code> 查看所有引用</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/VScodeFortran/symbol%20outline.PNG" alt="符号大纲" /></p>
+<ul>
+<li>Diagnostics
+<ul>
+<li>简单语法检查</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/VScodeFortran/diagnostics1.png" alt="语法检查" /></p>
+<h3 id="注释格式"><a class="markdownIt-Anchor" href="#注释格式"></a> 注释格式</h3>
+<ul>
+<li><code>fortls</code> 支持 <code>Doxygen</code> 和 <code>FORD</code> 文档样式
+<ul>
+<li>一般注释 <code>!</code> 不会生成文档</li>
+<li><code>Doxygen</code> 使用 <code>!!</code> <code>!&gt;</code> <code>!&lt;</code> 注释文档内容</li>
+<li><code>FORD</code> 使用 <code>!!</code> <code>!&gt;</code> <code>!&lt;</code> <code>!*</code> <code>!|</code> 注释文档内容</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">符号</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>docmark</code></td>
+<td style="text-align:left"><code>!!</code></td>
+<td>注释文档内容</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>premark</code></td>
+<td style="text-align:left"><code>!&gt;</code></td>
+<td>标记多行注释的第一行</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>docmark_alt</code></td>
+<td style="text-align:left"><code>!*</code></td>
+<td>多行文档块</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>predocmark_alt</code></td>
+<td style="text-align:left"><code>!|</code></td>
+<td>多行文档块</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>blkmark</code></td>
+<td style="text-align:left"><code>!...</code></td>
+<td>注释代码块</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>例</li>
+</ul>
+<figure class="highlight fortran"><table><tr><td class="code"><pre><span class="line"><span class="comment">!================================ SUM_TEST ========================70</span></span><br><span class="line"><span class="comment">!</span></span><br><span class="line"><span class="comment">!&gt; Subroutine to calculate the sum of two numbers.</span></span><br><span class="line"><span class="comment">!!  Two numbers are real.</span></span><br><span class="line"><span class="comment">!</span></span><br><span class="line"><span class="comment">!* Create for test.</span></span><br><span class="line"><span class="comment">!</span></span><br><span class="line"><span class="comment">!==================================================================70</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">subroutine</span></span> sum_test(num1, num2, num_sum)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">real</span>, <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: num1     <span class="comment">!&lt; number 1</span></span><br><span class="line">    <span class="keyword">real</span>, <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: num2     <span class="comment">!&lt; number 2</span></span><br><span class="line">    <span class="keyword">real</span>, <span class="keyword">intent</span>(<span class="keyword">out</span>) :: num_sum  <span class="comment">!&lt; sum</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">!...Calculation</span></span><br><span class="line"></span><br><span class="line">    num_sum = num1 + num2</span><br><span class="line"></span><br><span class="line">  <span class="comment">!...Print result</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">write</span> (*,*) num_sum</span><br><span class="line"></span><br><span class="line">  <span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> sum_test</span><br></pre></td></tr></table></figure>
+<ul>
+<li>子程序提示</li>
+</ul>
+<p><img src="/images/VScodeFortran/subroutine%20comment.png" alt="子程序提示" /></p>
+<ul>
+<li>函数提示</li>
+</ul>
+<p><img src="/images/VScodeFortran/function%20comment.png" alt="函数提示" /></p>
+<ul>
+<li>变量提示</li>
+</ul>
+<p><img src="/images/VScodeFortran/var%20comment.png" alt="变量提示" /></p>
+<ul>
+<li>代码折叠
+<ul>
+<li>全部折叠 <code>Ctrl + K + 0</code></li>
+<li>全部展开 <code>Ctrl + K + J</code></li>
+<li>按级折叠 <code>Ctrl + K + 1/2/3 ...</code></li>
+<li>折叠当前级 <code>Ctrl + K + [</code></li>
+<li>展开当前级 <code>Ctrl + K + ]</code></li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/VScodeFortran/folder%20code.PNG" alt="代码折叠" /></p>
+]]></content>
+      <categories>
+        <category>VSCode</category>
+      </categories>
+      <tags>
+        <tag>VSCode</tag>
+        <tag>Fortran</tag>
+        <tag>fortls</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenFOAM 安装</title>
+    <url>/2024/09/05/CFD/OpenFoam/OpenFOAM_Install/</url>
+    <content><![CDATA[<p>各版本 OpenFOAM 及 Paraview 安装</p>
+<span id="more"></span>
+<h2 id="下载"><a class="markdownIt-Anchor" href="#下载"></a> 下载</h2>
+<h2 id="openfoam安装"><a class="markdownIt-Anchor" href="#openfoam安装"></a> OpenFOAM安装</h2>
+<h2 id="parafoam安装"><a class="markdownIt-Anchor" href="#parafoam安装"></a> ParaFOAM安装</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">-- Could NOT find Qt5Svg (missing: Qt5Svg_DIR)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install libqt5svg5-dev</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/396064262">https://zhuanlan.zhihu.com/p/396064262</a><br />
+<a href="https://blog.csdn.net/muxuen/article/details/135298656">https://blog.csdn.net/muxuen/article/details/135298656</a></p>
+]]></content>
+      <categories>
+        <category>CFD</category>
+        <category>OpenFOAM</category>
+      </categories>
+      <tags>
+        <tag>OpenFOAM</tag>
+        <tag>Install</tag>
+        <tag>Paraview</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python 安装离线包</title>
+    <url>/2024/09/05/CST/Python/Python-install-package-offline/</url>
+    <content><![CDATA[<span id="more"></span>
+]]></content>
+      <categories>
+        <category>CST</category>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Install</tag>
+        <tag>Python</tag>
+        <tag>pip</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>stable-diffusion-webui 安装</title>
+    <url>/2024/09/05/CST/Python/Stable-Diffusion-Install/</url>
+    <content><![CDATA[<p>Ubuntu 安装 stable-diffusion-webui 记录</p>
+<span id="more"></span>
+<h2 id="版本信息"><a class="markdownIt-Anchor" href="#版本信息"></a> 版本信息</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Ubuntu 22.04.4 LTS</span><br><span class="line">conda 24.1.2</span><br><span class="line">NVIDIA-SMI 550.54.14</span><br><span class="line">CUDA Version 12.4</span><br></pre></td></tr></table></figure>
+<h2 id="安装pytorch"><a class="markdownIt-Anchor" href="#安装pytorch"></a> 安装pytorch</h2>
+<ul>
+<li>创建 pytorch 虚拟环境</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda create -n pytorch</span><br></pre></td></tr></table></figure>
+<ul>
+<li>进入 pytorch 空间</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda activate pytorch</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装 pytorch 最新版本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip3 install torch torchvision torchaudio -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装 pytorch 2.1.0</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda create -n pytorch212</span><br><span class="line">conda activate pytorch212</span><br></pre></td></tr></table></figure>
+<h2 id="安装-stable-diffusion-webui"><a class="markdownIt-Anchor" href="#安装-stable-diffusion-webui"></a> 安装 stable-diffusion-webui</h2>
+<ul>
+<li>安装依赖项</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install wget git python3 python3-venv libgl1 libglib2.0-0</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./webui.sh</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装 xformers</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> venv/bin</span><br><span class="line"><span class="built_in">source</span> activate</span><br><span class="line">pip install -U xformers</span><br><span class="line">deactivate</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装 TCMalloc</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get -y install libtcmalloc-minimal4</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>AI</category>
       </categories>
       <tags>
         <tag>Ubuntu</tag>
-        <tag>Tool</tag>
+        <tag>Install</tag>
+        <tag>AI</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PATO教程解析-1D-AblationTestCase_1.0</title>
+    <url>/2024/09/05/CFD/OpenFoam/PATO/PATO-Tutorial-1D-Ablation-1/</url>
+    <content><![CDATA[<p>解析 PATO 一维算例 AblationTestCase_1.0, 包括算例文件内容、分析流程及分析结果</p>
+<span id="more"></span>
+<h2 id="算例介绍"><a class="markdownIt-Anchor" href="#算例介绍"></a> 算例介绍</h2>
+<p><strong>AblationTestCase_1.0</strong> 教程计算 <strong>TACOT</strong> 材料的一维热响应</p>
+<h2 id="算例文件"><a class="markdownIt-Anchor" href="#算例文件"></a> 算例文件</h2>
+<p>其余算例与本算例文件结构基本相似</p>
+<ul>
+<li>AblationTestCase_1.0
+<ul>
+<li>Allclean</li>
+<li>Allplot</li>
+<li>Allrun</li>
+<li>constant
+<ul>
+<li>porousMat
+<ul>
+<li>porousMatProperties</li>
+</ul>
+</li>
+<li>regionProperties</li>
+</ul>
+</li>
+<li>data
+<ul>
+<li>ref
+<ul>
+<li>FIAT
+<ul>
+<li>pyrolysisFront</li>
+<li>T</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>origin.0
+<ul>
+<li>porousMat
+<ul>
+<li>p</li>
+<li>rho_s</li>
+<li>Ta</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>output
+<ul>
+<li>empty</li>
+</ul>
+</li>
+<li>plots
+<ul>
+<li><a href="http://plot.py">plot.py</a></li>
+</ul>
+</li>
+<li>system
+<ul>
+<li>controlDict</li>
+<li>porousMat
+<ul>
+<li>blockMeshDict</li>
+<li>fvSchemes</li>
+<li>fvSolution</li>
+<li>plotDict</li>
+<li>surfacePatchDict</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="执行文件"><a class="markdownIt-Anchor" href="#执行文件"></a> 执行文件</h3>
+<ul>
+<li>算例的执行文件包括：
+<ul>
+<li><code>Allrun</code> 运行教程</li>
+<li><code>Allplot</code> 运行 1D 绘图</li>
+<li><code>Allclean</code> 清除 time folder，图像，网格和PATO输出</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>CFD</category>
+        <category>OpenFOAM</category>
+        <category>PATO</category>
+      </categories>
+      <tags>
+        <tag>PATO</tag>
+        <tag>Tutorial</tag>
+        <tag>Ablation</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>NASA PATO安装 (Anaconda)</title>
+    <url>/2024/09/05/CFD/OpenFoam/PATO/PATO_Install/</url>
+    <content><![CDATA[<p>NASA PATO 代码安装与介绍</p>
+<span id="more"></span>
+<h2 id="pato介绍"><a class="markdownIt-Anchor" href="#pato介绍"></a> PATO介绍</h2>
+<p>PATO<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> (Porous material Analysis Toolbox) 多孔材料分析工具箱是NASA开发的开源（GNU GPL）多相多孔反应材料模块化分析平台。它可以作为一个简单的傅立叶传热代码运行，也包括更先进的功能，如内部分解（热解、蒸发）、气-气和气-固化学相互作用（燃烧、裂化、焦化）、气体组分传输（对流、扩散）和固体形态演变（内部密度变化、表面烧蚀）。PATO同时使用冯·卡门流体动力学研究所开发的开源（GNU LGPL）热力学、传输和化学库 Mutation++。</p>
+<p>PATO 官方网站 <a href="https://pato.ac">https://pato.ac</a><br />
+PATO Github仓库 <a href="https://github.com/nasa/pato">https://github.com/nasa/pato</a></p>
+<h2 id="anaconda介绍"><a class="markdownIt-Anchor" href="#anaconda介绍"></a> Anaconda介绍</h2>
+<p><a href="https://www.anaconda.com/">Anaconda</a> <sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup>是包含Conda的Python集成开发环境，主要用于科学计算，Conda是环境和包管理器。</p>
+<p>Anaconda 下载安装 <a href="https://docs.anaconda.com/free/anaconda/install/index.html">https://docs.anaconda.com/free/anaconda/install/index.html</a></p>
+<p>Anaconda 入门教程 <sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup></p>
+<p>Anaconda安装完成后，终端命令行前出现 (base) 字样<sup class="footnote-ref"><a href="#fn4" id="fnref4">[4]</a></sup>，取消方法:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda config --<span class="built_in">set</span> auto_activate_base False</span><br></pre></td></tr></table></figure>
+<h2 id="版本环境"><a class="markdownIt-Anchor" href="#版本环境"></a> 版本环境</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Ubuntu 22.04.4 LTS</span><br><span class="line">pato-3.1</span><br><span class="line">Anaconda3-2024.02-1-Linux-x86_64.sh</span><br></pre></td></tr></table></figure>
+<h2 id="安装-pato"><a class="markdownIt-Anchor" href="#安装-pato"></a> 安装 PATO</h2>
+<ul>
+<li>Anacoda 安装完成后直接复制以下所有命令并执行即可安装 PATO 组件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda config --add channels conda-forge</span><br><span class="line">conda config --add channels pato.devel</span><br><span class="line">conda config --<span class="built_in">set</span> channel_priority strict</span><br><span class="line">conda create -y --name pato -c conda-forge -c pato.devel pato</span><br></pre></td></tr></table></figure>
+<ul>
+<li>执行完毕后安装了 openfoam_for_pato 和 foam-extend_for_pato 软件包，可以在 <code>~/anaconda3/envs/pato/src</code> 路径下找到源码包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">volume_foam-extend_for_pato</span><br><span class="line">volume_openfoam_for_pato</span><br><span class="line">volume_pato</span><br></pre></td></tr></table></figure>
+<ul>
+<li>PATO 依赖 conda 环境来管理其软件依赖项和环境变量，在使用 PATO 的任何功能之前都需要激活环境 (执行 <code>conda env list</code> 可查看当前支持的环境)</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda activate pato</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首次安装完成后，可以运行测试算例 (建议在空文件夹下运行，测试失败会生成大量log文件)，测试通过代表安装成功</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">runtests</span><br></pre></td></tr></table></figure>
+<ul>
+<li>以下是卸载命令</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda remove -y --name pato --all</span><br></pre></td></tr></table></figure>
+<h2 id="运行算例"><a class="markdownIt-Anchor" href="#运行算例"></a> 运行算例</h2>
+<h3 id="执行流程"><a class="markdownIt-Anchor" href="#执行流程"></a> 执行流程</h3>
+<ul>
+<li>
+<p>所有测试算例可在 <code>~/anaconda3/envs/pato/src/volume_pato/pato-3.1/tutorials</code>  路径下找到，此处以 <code>1D/AblationTestCase_1.0</code> 为例介绍执行流程</p>
+</li>
+<li>
+<p>在该路径下打开 Terminal，更新并激活 PATO 环境</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda upgrade --all</span><br><span class="line">conda activate pato</span><br></pre></td></tr></table></figure>
+<ul>
+<li>算例路径下文件结构为</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.</span><br><span class="line">├── Allclean</span><br><span class="line">├── Allplot</span><br><span class="line">├── Allrun</span><br><span class="line">├── constant</span><br><span class="line">│   ├── porousMat</span><br><span class="line">│   │   └── porousMatProperties</span><br><span class="line">│   └── regionProperties</span><br><span class="line">├── data</span><br><span class="line">│   └── ref</span><br><span class="line">│       └── FIAT</span><br><span class="line">│           ├── pyrolysisFront</span><br><span class="line">│           └── T</span><br><span class="line">├── origin.0</span><br><span class="line">│   └── porousMat</span><br><span class="line">│       ├── p</span><br><span class="line">│       ├── rho_s</span><br><span class="line">│       └── Ta</span><br><span class="line">├── output</span><br><span class="line">│   └── empty</span><br><span class="line">├── plots</span><br><span class="line">│   └── plot.py</span><br><span class="line">└── system</span><br><span class="line">    ├── controlDict</span><br><span class="line">    └── porousMat</span><br><span class="line">        ├── blockMeshDict</span><br><span class="line">        ├── fvSchemes</span><br><span class="line">        ├── fvSolution</span><br><span class="line">        ├── plotDict</span><br><span class="line">        └── surfacePatchDict</span><br></pre></td></tr></table></figure>
+<ul>
+<li>运行 Allrun 执行算例</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./Allrun</span><br></pre></td></tr></table></figure>
+<ul>
+<li>执行后文件夹下会多出许多结果文件，此时运行 Allplot 可绘制结果图像，生成的 PDF 文件可在 <code>plots</code> 文件夹下找到</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./Allplot</span><br></pre></td></tr></table></figure>
+<ul>
+<li>运行 Allclean 清理图像、网格和PATO输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./Allclean</span><br></pre></td></tr></table></figure>
+<h3 id="问题1"><a class="markdownIt-Anchor" href="#问题1"></a> 问题1</h3>
+<ul>
+<li>首次执行 <code>./Allplot</code> 可能由于缺少 <code>matplotlib</code> 包报错</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ImportError: No module named pylab</span><br></pre></td></tr></table></figure>
+<ul>
+<li>执行 <code>conda list</code> 可查看已安装的包，执行以下命令安装包，两者选其一即可，此处添加了镜像源</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda install numpy scipy matplotlib -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install numpy scipy matplotlib -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure>
+<ul>
+<li>卸载包使用的命令与pip有所不同</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda remove matplotlib</span><br><span class="line">pip uninstall matplotlib</span><br></pre></td></tr></table></figure>
+<h3 id="问题2"><a class="markdownIt-Anchor" href="#问题2"></a> 问题2</h3>
+<ul>
+<li>运行 <code>./Allplot</code> 可能会出现以下报错</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">evince: error <span class="keyword">while</span> loading shared libraries: libgobject-2.0.so.0: failed to map segment from shared object</span><br></pre></td></tr></table></figure>
+<ul>
+<li>StackOverflow<sup class="footnote-ref"><a href="#fn5" id="fnref5">[5]</a></sup> 给出了一个解决方案，但并未起效</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install -y libglib2.0-0 libsm6 libxrender1 libxext6</span><br></pre></td></tr></table></figure>
+<ul>
+<li>退出环境（打开新的Terminal）后运行 <code>./Allplot</code> 可成功绘制图像，尚未清楚原因</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda deactivate</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<hr class="footnotes-sep" />
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p><a href="https://software.nasa.gov/software/ARC-16680-1A">Porous material Analysis Toolbox based on OpenFoam (PATO)(ARC-16680-1A)</a> <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p><a href="https://zhuanlan.zhihu.com/p/32925500">Anaconda介绍、安装及使用教程 - 知乎</a> <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn3" class="footnote-item"><p><a href="https://www.jianshu.com/p/eaee1fadc1e9">Anaconda完全入门指南 - 简书</a> <a href="#fnref3" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn4" class="footnote-item"><p><a href="https://www.cnblogs.com/devilmaycry812839668/p/10349602.html">安装 aconda 后Linux的终端界面前部出现（base）字样 - 博客园</a> <a href="#fnref4" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn5" class="footnote-item"><p><a href="https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o">ImportError: libgthread-2.0.so.0… - StackOverflow</a> <a href="#fnref5" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+]]></content>
+      <categories>
+        <category>CFD</category>
+        <category>OpenFOAM</category>
+        <category>PATO</category>
+      </categories>
+      <tags>
+        <tag>OpenFOAM</tag>
+        <tag>Install</tag>
+        <tag>PATO</tag>
       </tags>
   </entry>
 </search>
