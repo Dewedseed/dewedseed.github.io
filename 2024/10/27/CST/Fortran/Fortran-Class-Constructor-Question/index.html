@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="当类中包含指针时，在执行析构函数可能出现内存错误，由此测试派生类型作为 function 或 subroutine 输入输出变量时的差异">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fortran 派生类型的构造函数问题及其作为函数参数时的行为">
+<meta property="og:url" content="http://example.com/2024/10/27/CST/Fortran/Fortran-Class-Constructor-Question/index.html">
+<meta property="og:site_name" content="Dewedseed&#39;s Blog">
+<meta property="og:description" content="当类中包含指针时，在执行析构函数可能出现内存错误，由此测试派生类型作为 function 或 subroutine 输入输出变量时的差异">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-27T01:37:31.729Z">
+<meta property="article:modified_time" content="2024-12-10T09:39:50.178Z">
+<meta property="article:author" content="Dewedseed">
+<meta property="article:tag" content="Fortran">
+<meta property="article:tag" content="OOP">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/10/27/CST/Fortran/Fortran-Class-Constructor-Question/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/10/27/CST/Fortran/Fortran-Class-Constructor-Question/","path":"2024/10/27/CST/Fortran/Fortran-Class-Constructor-Question/","title":"Fortran 派生类型的构造函数问题及其作为函数参数时的行为"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Fortran 派生类型的构造函数问题及其作为函数参数时的行为 | Dewedseed's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Dewedseed's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-docs"><a href="/Docs/" rel="section"><i class="fa fa-folder-open fa-fw"></i>Docs</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">28</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">29</span></a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">1.</span> <span class="nav-text"> 测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.1.</span> <span class="nav-text"> 测试程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="nav-number">1.2.</span> <span class="nav-text"> 测试结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.3.</span> <span class="nav-text"> 分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text"> 执行过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E9%92%88"><span class="nav-number">2.</span> <span class="nav-text"> 指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8"><span class="nav-number">3.</span> <span class="nav-text"> 链表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8%E9%87%8A%E6%94%BE%E6%96%B9%E5%BC%8F%E5%8C%BA%E5%88%AB"><span class="nav-number">4.</span> <span class="nav-text"> 链表释放方式区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%8B%E5%80%BC%E6%93%8D%E4%BD%9C"><span class="nav-number">5.</span> <span class="nav-text"> 赋值操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text"> 参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dewedseed"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Dewedseed</p>
+  <div class="site-description" itemprop="description">Colorful Fluid Display Worker</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Dewedseed" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Dewedseed" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/27/CST/Fortran/Fortran-Class-Constructor-Question/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dewedseed">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dewedseed's Blog">
+      <meta itemprop="description" content="Colorful Fluid Display Worker">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Fortran 派生类型的构造函数问题及其作为函数参数时的行为 | Dewedseed's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Fortran 派生类型的构造函数问题及其作为函数参数时的行为
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-27 09:37:31" itemprop="dateCreated datePublished" datetime="2024-10-27T09:37:31+08:00">2024-10-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-12-10 17:39:50" itemprop="dateModified" datetime="2024-12-10T17:39:50+08:00">2024-12-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CST/" itemprop="url" rel="index"><span itemprop="name">CST</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CST/Fortran/" itemprop="url" rel="index"><span itemprop="name">Fortran</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>8 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>当类中包含指针时，在执行析构函数可能出现内存错误，由此测试派生类型作为 function 或 subroutine 输入输出变量时的差异</p>
+<span id="more"></span>
+<h2 id="测试"><a class="markdownIt-Anchor" href="#测试"></a> 测试</h2>
+<p>创建对象 Student, 采用 <a target="_blank" rel="noopener" href="https://dannyvanpoucke.be/oop-fortran-tut4-en/">参考链接</a> 中的方法定义构造函数和析构函数, 并在不同位置输出信息, 查看析构函数调用情况.</p>
+<h3 id="测试程序"><a class="markdownIt-Anchor" href="#测试程序"></a> 测试程序</h3>
+<p>定义对象 Student 如下</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">module</span> test_class_constructor</span><br><span class="line">  <span class="keyword">implicit</span> <span class="keyword">none</span></span><br><span class="line"><span class="comment">!...Define scope</span></span><br><span class="line">  <span class="keyword">private</span></span><br><span class="line">  <span class="keyword">public</span>  :: new_ClassStudent_sub, ClassStudent</span><br><span class="line"><span class="comment">!...Declare class</span></span><br><span class="line">  <span class="keyword">type</span> :: ClassStudent</span><br><span class="line">    <span class="keyword">integer</span>,            <span class="keyword">private</span> :: id</span><br><span class="line">    <span class="keyword">character</span>(len=<span class="number">128</span>), <span class="keyword">public</span>  :: <span class="keyword">name</span></span><br><span class="line">  <span class="keyword">contains</span></span><br><span class="line">    <span class="keyword">procedure</span>, <span class="keyword">public</span>, <span class="keyword">pass</span> :: init =&gt; new_ClassStudent_sub2</span><br><span class="line">    <span class="keyword">final</span> :: delete_ClassStudent  <span class="comment">!&lt; Destructor</span></span><br><span class="line">  <span class="keyword">end</span> <span class="keyword">type</span> ClassStudent</span><br><span class="line">  <span class="comment">!&gt; Constructor of class ClassStudent</span></span><br><span class="line">  <span class="keyword">interface</span> ClassStudent</span><br><span class="line">    <span class="keyword">module</span> <span class="keyword">procedure</span> new_ClassStudent_fun</span><br><span class="line">  <span class="keyword">end</span> <span class="keyword">interface</span> ClassStudent</span><br><span class="line"><span class="keyword">contains</span></span><br><span class="line">  <span class="comment">!&gt; Constructor of class ClassStudent</span></span><br><span class="line">  <span class="keyword">type</span>(ClassStudent) <span class="function"><span class="keyword">function</span></span> new_ClassStudent_fun(id, <span class="keyword">name</span>)</span><br><span class="line">    <span class="keyword">integer</span>,          <span class="keyword">intent</span>(<span class="keyword">in</span>) :: id</span><br><span class="line">    <span class="keyword">character</span>(len=*), <span class="keyword">intent</span>(<span class="keyword">in</span>) :: <span class="keyword">name</span></span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line">    <span class="built_in">write</span> (*,*) <span class="string">&quot;Initial Student &quot;</span>, new_ClassStudent_fun%id, <span class="string">&quot;: &quot;</span>, &amp;</span><br><span class="line">                                    <span class="built_in">trim</span>(new_ClassStudent_fun%<span class="keyword">name</span>)</span><br><span class="line">    new_ClassStudent_fun%id   = id</span><br><span class="line">    new_ClassStudent_fun%<span class="keyword">name</span> = <span class="built_in">trim</span>(<span class="keyword">name</span>)</span><br><span class="line">    <span class="built_in">write</span> (*,*) <span class="string">&quot;Creating Student &quot;</span>, new_ClassStudent_fun%id, <span class="string">&quot;: &quot;</span>, &amp;</span><br><span class="line">                                    <span class="built_in">trim</span>(new_ClassStudent_fun%<span class="keyword">name</span>)</span><br><span class="line">  <span class="keyword">end</span> <span class="function"><span class="keyword">function</span></span> new_ClassStudent_fun</span><br><span class="line">  <span class="comment">!&gt; Destructor of class ClassStudent</span></span><br><span class="line">  <span class="function"><span class="keyword">subroutine</span></span> delete_ClassStudent(this)</span><br><span class="line">    <span class="keyword">type</span>(ClassStudent), <span class="keyword">intent</span>(inout) :: this</span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line">    <span class="built_in">write</span> (*,*) <span class="string">&quot;Deleting Student &quot;</span>, this%id, <span class="string">&quot;: &quot;</span>, <span class="built_in">trim</span>(this%<span class="keyword">name</span>)</span><br><span class="line">  <span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> delete_ClassStudent</span><br><span class="line">  <span class="comment">!&gt; create new_student by subroutine</span></span><br><span class="line">  <span class="function"><span class="keyword">subroutine</span></span> new_ClassStudent_sub(id, <span class="keyword">name</span>, new_Student)</span><br><span class="line">    <span class="keyword">integer</span>,            <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: id</span><br><span class="line">    <span class="keyword">character</span>(len=*),   <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: <span class="keyword">name</span></span><br><span class="line">    <span class="keyword">type</span>(ClassStudent), <span class="keyword">intent</span>(inout) :: new_Student</span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line">    <span class="built_in">write</span> (*,*) <span class="string">&quot;Initial Student &quot;</span>, new_Student%id, <span class="string">&quot;: &quot;</span>, &amp;</span><br><span class="line">                                    <span class="built_in">trim</span>(new_Student%<span class="keyword">name</span>)</span><br><span class="line">    new_Student%id   = id</span><br><span class="line">    new_Student%<span class="keyword">name</span> = <span class="built_in">trim</span>(<span class="keyword">name</span>)</span><br><span class="line">    <span class="built_in">write</span> (*,*) <span class="string">&quot;Creating Student &quot;</span>, new_Student%id, <span class="string">&quot;: &quot;</span>, &amp;</span><br><span class="line">                                      <span class="built_in">trim</span>(new_Student%<span class="keyword">name</span>)</span><br><span class="line">  <span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> new_ClassStudent_sub</span><br><span class="line">  <span class="comment">!&gt; create new_student by subroutine</span></span><br><span class="line">  <span class="function"><span class="keyword">subroutine</span></span> new_ClassStudent_sub2(this, id, <span class="keyword">name</span>)</span><br><span class="line">    <span class="keyword">integer</span>,            <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: id</span><br><span class="line">    <span class="keyword">character</span>(len=*),   <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: <span class="keyword">name</span></span><br><span class="line">    <span class="keyword">class</span>(ClassStudent), <span class="keyword">intent</span>(inout) :: this</span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line">    <span class="built_in">write</span> (*,*) <span class="string">&quot;Initial Student &quot;</span>, this%id, <span class="string">&quot;: &quot;</span>, <span class="built_in">trim</span>(this%<span class="keyword">name</span>)</span><br><span class="line">    this%id   = id</span><br><span class="line">    this%<span class="keyword">name</span> = <span class="built_in">trim</span>(<span class="keyword">name</span>)</span><br><span class="line">    <span class="built_in">write</span> (*,*) <span class="string">&quot;Creating Student &quot;</span>, this%id, <span class="string">&quot;: &quot;</span>, <span class="built_in">trim</span>(this%<span class="keyword">name</span>)</span><br><span class="line">  <span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> new_ClassStudent_sub2</span><br><span class="line"><span class="keyword">end</span> <span class="keyword">module</span> test_class_constructor</span><br></pre></td></tr></table></figure>
+<p>执行的测试程序为</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">subroutine</span></span> test_ClassStudent()</span><br><span class="line">  <span class="keyword">use</span> test_class_constructor</span><br><span class="line">  <span class="keyword">type</span>(ClassStudent) :: Bob, Nick, Alice</span><br><span class="line"><span class="keyword">continue</span></span><br><span class="line">  Bob%<span class="keyword">name</span> = <span class="string">&quot;Nick&quot;</span></span><br><span class="line">  Bob = ClassStudent(<span class="number">1</span>, <span class="string">&quot;Bob&quot;</span>)</span><br><span class="line">  <span class="built_in">write</span> (*,*) <span class="string">&quot;Checking Student: &quot;</span>, <span class="built_in">trim</span>(Bob%<span class="keyword">name</span>)</span><br><span class="line">  Nick%<span class="keyword">name</span> = <span class="string">&quot;Bob&quot;</span></span><br><span class="line">  <span class="keyword">call</span> new_ClassStudent_sub(<span class="number">2</span>, <span class="string">&quot;Nick&quot;</span>, Nick)</span><br><span class="line">  <span class="built_in">write</span> (*,*) <span class="string">&quot;Checking Student :&quot;</span>, <span class="built_in">trim</span>(Nick%<span class="keyword">name</span>)</span><br><span class="line">  Alice%<span class="keyword">name</span> = <span class="string">&quot;Eric&quot;</span></span><br><span class="line">  <span class="keyword">call</span> Alice%init(<span class="number">3</span>, <span class="string">&quot;Alice&quot;</span>)</span><br><span class="line">  <span class="built_in">write</span> (*,*) <span class="string">&quot;Checking Student :&quot;</span>, <span class="built_in">trim</span>(Alice%<span class="keyword">name</span>)</span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> test_ClassStudent</span><br></pre></td></tr></table></figure>
+<h3 id="测试结果"><a class="markdownIt-Anchor" href="#测试结果"></a> 测试结果</h3>
+<ul>
+<li>调用 <code>ClassStudent()</code> 时输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Initial Student            0 : �=.����9�u�9��</span><br><span class="line">Creating Student            1 : Bob</span><br><span class="line">Deleting Student            0 : Nick</span><br><span class="line">Deleting Student            1 : Bob</span><br><span class="line">Checking Student: Bob</span><br><span class="line">Deleting Student            1 : Bob</span><br></pre></td></tr></table></figure>
+<ul>
+<li>调用 <code>new_ClassStudent_sub</code> 且输入类型为 <code>intent(inout)</code> 时输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Initial Student            0 : Bob</span><br><span class="line">Creating Student            2 : Nick</span><br><span class="line">Checking Student :Nick</span><br><span class="line">Deleting Student            2 : Nick</span><br></pre></td></tr></table></figure>
+<ul>
+<li>调用 <code>new_ClassStudent_sub</code> 且输入类型为 <code>intent(out)</code> 时输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Deleting Student            0 : Bob</span><br><span class="line">Initial Student            0 : Bob</span><br><span class="line">Creating Student            2 : Nick</span><br><span class="line">Checking Student :Nick</span><br><span class="line">Deleting Student            2 : Nick</span><br></pre></td></tr></table></figure>
+<ul>
+<li>调用 <code>init()</code> 且输入类型为 <code>intent(inout)</code> 时输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Initial Student        17748 : Eric</span><br><span class="line">Creating Student            3 : Alice</span><br><span class="line">Checking Student :Alice</span><br><span class="line">Deleting Student            3 : Alice</span><br></pre></td></tr></table></figure>
+<ul>
+<li>调用 <code>init()</code> 且输入类型为 <code>intent(out)</code> 时输出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Deleting Student      2752512 : Eric</span><br><span class="line">Initial Student            0 :</span><br><span class="line">Creating Student            3 : Alice</span><br><span class="line">Checking Student :Alice</span><br><span class="line">Deleting Student            3 : Alice</span><br></pre></td></tr></table></figure>
+<h3 id="分析"><a class="markdownIt-Anchor" href="#分析"></a> 分析</h3>
+<p>在 StackOverflow <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1011604/what-is-the-explicit-difference-between-the-fortran-intents-in-out-inout">What is the explicit difference between the fortran intents (in,out,inout)?</a> 中提到:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">intent(<span class="keyword">in</span>) -- The actual argument is copied to the dummy argument at entry.</span><br><span class="line">intent(out) -- The dummy argument points to the actual argument (they both point to the same place <span class="keyword">in</span> memory).</span><br><span class="line">intent(inout) -- the dummy argument is created locally, and <span class="keyword">then</span> copied to the actual argument when the procedure is finished.</span><br></pre></td></tr></table></figure>
+<p>采用 gdb 查看不同方法下变量指向的内存</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Paramter</th>
+<th style="text-align:left">actual</th>
+<th style="text-align:left">dummy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">ClassStudent</td>
+<td style="text-align:left">0x7fffffffcf00</td>
+<td style="text-align:left">0x7fffffffcab0</td>
+</tr>
+<tr>
+<td style="text-align:left">new_ClassStudent_sub - intent(out)</td>
+<td style="text-align:left">0x7fffffffcf00</td>
+<td style="text-align:left">0x7fffffffcf00</td>
+</tr>
+<tr>
+<td style="text-align:left">new_ClassStudent_sub - intent(inout)</td>
+<td style="text-align:left">0x7fffffffcf00</td>
+<td style="text-align:left">0x7fffffffcf00</td>
+</tr>
+<tr>
+<td style="text-align:left">init - intent(out)</td>
+<td style="text-align:left">0x7fffffffcf00</td>
+<td style="text-align:left">0x7fffffffcf00</td>
+</tr>
+<tr>
+<td style="text-align:left">init - intent(inout)</td>
+<td style="text-align:left">0x7fffffffcf00</td>
+<td style="text-align:left">0x7fffffffcf00</td>
+</tr>
+</tbody>
+</table>
+<p>推测使用 <code>intent(out)</code> 时发生了以下行为： 由于实参和形参指向相同内存，<code>intent(out)</code> 需确保形参为初始化状态，因此调用析构函数清理相同内存中实参所保存的先前内容</p>
+<h3 id="执行过程"><a class="markdownIt-Anchor" href="#执行过程"></a> 执行过程</h3>
+<p>调用 <code>ClassStudent()</code> 执行过程</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 进入 <span class="code">`ClassStudent()`</span>，执行 <span class="code">`(gdb) info locals`</span> 确认局部参数为 <span class="code">`__result_new_classstudent_fun`</span>，输出相关信息</span><br><span class="line">  Initial Student            0 : �=.����9�u�9��</span><br><span class="line">  Creating Student            1 : Bob</span><br><span class="line"><span class="bullet">2.</span> 执行赋值操作 <span class="code">`Bob = ClassStudent(1, &quot;Bob&quot;)`</span>，首先清除原 <span class="code">`Bob`</span> 对象内容，赋值后清除 <span class="code">`__result_new_classstudent_fun`</span> 内容</span><br><span class="line">  Deleting Student            0 : Nick</span><br><span class="line">  Deleting Student            1 : Bob</span><br><span class="line"><span class="bullet">3.</span> 测试程序 <span class="code">`test_ClassStudent()`</span> 结束</span><br><span class="line">  Checking Student: Bob</span><br><span class="line">  Deleting Student            1 : Bob</span><br></pre></td></tr></table></figure>
+<p>调用 <code>new_ClassStudent_sub()</code> 执行过程</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 进入 <span class="code">`new_ClassStudent_sub()`</span>，定义变量 <span class="code">`type(ClassStudent), intent(out) :: new_Student`</span> 后清除原 <span class="code">`Nick`</span> 内容</span><br><span class="line">  Deleting Student            0 : Bob</span><br><span class="line"><span class="bullet">2.</span> 重新赋值 <span class="code">`new_Student`</span></span><br><span class="line">  Initial Student            0 : Bob</span><br><span class="line">  Creating Student            2 : Nick</span><br><span class="line"><span class="bullet">3.</span> 测试程序 <span class="code">`test_ClassStudent()`</span> 结束</span><br><span class="line">  Checking Student :Nick</span><br><span class="line">  Deleting Student            2 : Nick</span><br></pre></td></tr></table></figure>
+<p>调用 <code>init()</code> 执行过程</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 进入 <span class="code">`init()`</span>，定义变量 <span class="code">`class(ClassStudent), intent(out) :: this`</span> 后清除原 <span class="code">`Alice`</span> 内容</span><br><span class="line">  Deleting Student      2752512 : Eric</span><br><span class="line"><span class="bullet">2.</span> 重新赋值 <span class="code">`this%_data`</span></span><br><span class="line">  Initial Student            0 :</span><br><span class="line">  Creating Student            3 : Alice</span><br><span class="line"><span class="bullet">3.</span> 测试程序 <span class="code">`test_ClassStudent()`</span> 结束</span><br><span class="line">  Checking Student :Alice</span><br><span class="line">  Deleting Student            3 : Alice</span><br></pre></td></tr></table></figure>
+<h2 id="指针"><a class="markdownIt-Anchor" href="#指针"></a> 指针</h2>
+<p>在 <code>ClassStudent</code> 中添加指针</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span>(ClassStudent), <span class="keyword">pointer</span> :: next</span><br></pre></td></tr></table></figure>
+<p>在析构函数 <code>final :: delete_ClassStudent</code> 中释放内存</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( <span class="built_in">associated</span>(this%next) ) <span class="built_in">deallocate</span>(this%next)</span><br></pre></td></tr></table></figure>
+<p>在执行 <code>Bob = ClassStudent(1, &quot;Bob&quot;)</code> 发生段错误</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> Initial Student            0 : ���V���j�8&#123;5��8&#123;�</span><br><span class="line"> Creating Student            1 : Bob</span><br><span class="line"> Deleting Student            0 : Nick</span><br><span class="line"></span><br><span class="line">Program received signal SIGSEGV: Segmentation fault - invalid memory reference.</span><br></pre></td></tr></table></figure>
+<p>该错误发生在 <code>ClassStudent(1, &quot;Bob&quot;)</code> 向 <code>Bob</code> 赋值时, 调用析构函数清除 <code>Bob</code> 初始内容, 而 <code>Bob%next</code> 未指向 <code>null()</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p &amp;bob%next</span><br><span class="line"><span class="variable">$1</span> = (PTR TO -&gt; ( Type classstudent )) 0x1</span><br></pre></td></tr></table></figure>
+<p>解决方法: 在声明时直接初始化</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">integer</span>,            <span class="keyword">private</span> :: id   = <span class="number">0</span></span><br><span class="line"><span class="keyword">character</span>(len=<span class="number">128</span>), <span class="keyword">public</span>  :: <span class="keyword">name</span> = <span class="string">&quot;None&quot;</span></span><br><span class="line"><span class="keyword">type</span>(ClassStudent), <span class="keyword">pointer</span> :: next =&gt; null()</span><br></pre></td></tr></table></figure>
+<p>测试另一种方法: 将 Bob 声明为指针, 构造函数声明为指针函数 <code>Bob =&gt; ClassStudent(1, &quot;Bob&quot;)</code>, 执行结果如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Initial Student            0 :</span><br><span class="line">Creating Student            1 : Bob</span><br><span class="line">Checking Student: Bob</span><br></pre></td></tr></table></figure>
+<p>整个过程中未调用析构函数, 检查内存地址变化情况</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">=======================================================================</span><br><span class="line">(gdb) p bob</span><br><span class="line"><span class="variable">$1</span> = (PTR TO -&gt; ( Type classstudent )) 0x1</span><br><span class="line">(gdb) p &amp;bob</span><br><span class="line"><span class="variable">$2</span> = (PTR TO -&gt; ( PTR TO -&gt; ( Type classstudent ) )) 0x7fffffffcf88</span><br><span class="line">=======================================================================</span><br><span class="line">(gdb) p new_student</span><br><span class="line"><span class="variable">$3</span> = (PTR TO -&gt; ( Type classstudent )) 0x555555564b90</span><br><span class="line">(gdb) p &amp;new_student</span><br><span class="line"><span class="variable">$4</span> = (PTR TO -&gt; ( PTR TO -&gt; ( Type classstudent ) )) 0x7fffffffcd38</span><br><span class="line">=======================================================================</span><br><span class="line">(gdb) p bob</span><br><span class="line"><span class="variable">$5</span> = (PTR TO -&gt; ( Type classstudent )) 0x555555564b90</span><br><span class="line">(gdb) p &amp;bob</span><br><span class="line"><span class="variable">$6</span> = (PTR TO -&gt; ( PTR TO -&gt; ( Type classstudent ) )) 0x7fffffffcf88</span><br><span class="line">=======================================================================</span><br></pre></td></tr></table></figure>
+<h2 id="链表"><a class="markdownIt-Anchor" href="#链表"></a> 链表</h2>
+<p>对链表对象 <code>ClassStudent</code> 添加析构函数, 无需在 <code>ClassGroup</code> 析构函数中循环释放内存, 测试代码如下</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> test_linklist</span><br><span class="line">  <span class="keyword">implicit</span> <span class="keyword">none</span></span><br><span class="line"><span class="comment">!...Define scope</span></span><br><span class="line">  <span class="keyword">private</span></span><br><span class="line">  <span class="keyword">public</span> :: ClassGroup</span><br><span class="line"><span class="comment">!...Declare local variables</span></span><br><span class="line">  <span class="keyword">type</span> :: ClassStudent</span><br><span class="line">    <span class="keyword">integer</span>,            <span class="keyword">private</span> :: id   = <span class="number">0</span></span><br><span class="line">    <span class="keyword">character</span>(len=<span class="number">128</span>), <span class="keyword">public</span>  :: <span class="keyword">name</span> = <span class="string">&quot;None&quot;</span></span><br><span class="line">    <span class="keyword">type</span>(ClassStudent), <span class="keyword">pointer</span> :: next =&gt; null()</span><br><span class="line">  <span class="keyword">contains</span></span><br><span class="line">    <span class="keyword">final</span> :: delete_ClassStudent  <span class="comment">!&lt; Destructor</span></span><br><span class="line">  <span class="keyword">end</span> <span class="keyword">type</span> ClassStudent</span><br><span class="line">  <span class="comment">!&gt; Constructor of class ClassStudent</span></span><br><span class="line">  <span class="keyword">interface</span> ClassStudent</span><br><span class="line">    <span class="keyword">module</span> <span class="keyword">procedure</span> new_ClassStudent_fun</span><br><span class="line">  <span class="keyword">end</span> <span class="keyword">interface</span> ClassStudent</span><br><span class="line"></span><br><span class="line">  <span class="keyword">type</span> :: ClassGroup</span><br><span class="line">    <span class="keyword">integer</span>,                     <span class="keyword">private</span> :: nstudents = <span class="number">0</span></span><br><span class="line">    <span class="keyword">type</span>(ClassStudent), <span class="keyword">pointer</span>, <span class="keyword">private</span> :: head =&gt; null()</span><br><span class="line">  <span class="keyword">contains</span></span><br><span class="line">    <span class="keyword">procedure</span>, <span class="keyword">public</span>, <span class="keyword">pass</span> :: add =&gt; add_student</span><br><span class="line">    <span class="keyword">final</span> :: delete_ClassGroup  <span class="comment">!&lt; Destructor</span></span><br><span class="line">  <span class="keyword">end</span> <span class="keyword">type</span> ClassGroup</span><br><span class="line"></span><br><span class="line"><span class="keyword">contains</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">!&gt; Constructor of class ClassStudent</span></span><br><span class="line">  <span class="keyword">type</span>(ClassStudent) <span class="function"><span class="keyword">function</span></span> new_ClassStudent_fun(id, <span class="keyword">name</span>) result(new_Student)</span><br><span class="line">    <span class="keyword">integer</span>,          <span class="keyword">intent</span>(<span class="keyword">in</span>) :: id</span><br><span class="line">    <span class="keyword">character</span>(len=*), <span class="keyword">intent</span>(<span class="keyword">in</span>) :: <span class="keyword">name</span></span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line">    new_Student%id   = id</span><br><span class="line">    new_Student%<span class="keyword">name</span> = <span class="built_in">trim</span>(<span class="keyword">name</span>)</span><br><span class="line">    new_Student%next =&gt; null()</span><br><span class="line">  <span class="keyword">end</span> <span class="function"><span class="keyword">function</span></span> new_ClassStudent_fun</span><br><span class="line"></span><br><span class="line">  <span class="comment">!&gt; Destructor of class ClassStudent</span></span><br><span class="line">  <span class="function"><span class="keyword">subroutine</span></span> delete_ClassStudent(this)</span><br><span class="line">    <span class="keyword">type</span>(ClassStudent), <span class="keyword">intent</span>(inout) :: this</span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line">    <span class="built_in">write</span> (*,*) <span class="string">&quot;Deleting Student &quot;</span>, this%id, <span class="string">&quot;: &quot;</span>, <span class="built_in">trim</span>(this%<span class="keyword">name</span>)</span><br><span class="line">    <span class="keyword">if</span> ( <span class="built_in">associated</span>(this%next) ) <span class="built_in">deallocate</span>(this%next)</span><br><span class="line">  <span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> delete_ClassStudent</span><br><span class="line"></span><br><span class="line">  <span class="comment">!&gt; Destructor of class ClassGroup</span></span><br><span class="line">  <span class="function"><span class="keyword">subroutine</span></span> delete_ClassGroup(this)</span><br><span class="line">    <span class="keyword">type</span>(ClassGroup), <span class="keyword">intent</span>(inout) :: this</span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line">    <span class="built_in">write</span> (*,*) <span class="string">&quot;Deleting ClassGroup&quot;</span></span><br><span class="line">    <span class="keyword">if</span> ( <span class="built_in">associated</span>(this%head) ) <span class="built_in">deallocate</span>(this%head)</span><br><span class="line">  <span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> delete_ClassGroup</span><br><span class="line"></span><br><span class="line">  <span class="comment">!&gt; Add new student to group</span></span><br><span class="line">  <span class="function"><span class="keyword">subroutine</span></span> add_student(this, <span class="keyword">name</span>)</span><br><span class="line">    <span class="keyword">class</span>(ClassGroup), <span class="keyword">intent</span>(inout) :: this</span><br><span class="line">    <span class="keyword">character</span>(len=*),  <span class="keyword">intent</span>(<span class="keyword">in</span>)    :: <span class="keyword">name</span></span><br><span class="line">  <span class="comment">!...Define local variables</span></span><br><span class="line">    <span class="keyword">type</span>(ClassStudent), <span class="keyword">pointer</span> :: new_Student</span><br><span class="line">    <span class="keyword">integer</span> :: ierr</span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line">    <span class="built_in">allocate</span>(new_Student, stat=ierr)</span><br><span class="line">    this%nstudents = this%nstudents + <span class="number">1</span></span><br><span class="line">    new_Student    = ClassStudent(this%nstudents, <span class="keyword">name</span>)</span><br><span class="line">    <span class="keyword">if</span> ( <span class="built_in">associated</span>(this%head) ) <span class="keyword">then</span></span><br><span class="line">      new_Student%next =&gt; this%head</span><br><span class="line">      this%head        =&gt; new_Student</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      this%head =&gt; new_Student</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">if</span></span><br><span class="line">    <span class="built_in">nullify</span>(new_Student)</span><br><span class="line">  <span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> add_student</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> <span class="keyword">module</span> test_linklist</span><br></pre></td></tr></table></figure>
+<p>执行代码</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">subroutine</span></span> test_ClassGroup()</span><br><span class="line">  <span class="keyword">use</span> test_linklist</span><br><span class="line">  <span class="keyword">type</span>(ClassGroup) :: Group</span><br><span class="line"><span class="keyword">continue</span></span><br><span class="line">  <span class="keyword">call</span> Group%add(<span class="string">&quot;Bob&quot;</span>)</span><br><span class="line">  <span class="keyword">call</span> Group%add(<span class="string">&quot;Alice&quot;</span>)</span><br><span class="line">  <span class="keyword">call</span> Group%add(<span class="string">&quot;Eric&quot;</span>)</span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> test_ClassGroup</span><br></pre></td></tr></table></figure>
+<p>执行结果, 链表对象内存递归释放</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Deleting Student            0 : None</span><br><span class="line">Deleting Student            1 : Bob</span><br><span class="line">Deleting Student            0 : None</span><br><span class="line">Deleting Student            2 : Alice</span><br><span class="line">Deleting Student            0 : None</span><br><span class="line">Deleting Student            3 : Eric</span><br><span class="line"></span><br><span class="line">Deleting ClassGroup</span><br><span class="line">Deleting Student            3 : Eric</span><br><span class="line">Deleting Student            2 : Alice</span><br><span class="line">Deleting Student            1 : Bob</span><br></pre></td></tr></table></figure>
+<h2 id="链表释放方式区别"><a class="markdownIt-Anchor" href="#链表释放方式区别"></a> 链表释放方式区别</h2>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">subroutine</span></span> test_process()</span><br><span class="line">  <span class="keyword">type</span>(ClassStudent), <span class="keyword">pointer</span> :: Students =&gt; null()</span><br><span class="line">  <span class="keyword">type</span>(ClassStudent), <span class="keyword">pointer</span> :: new_Student1 =&gt; null()</span><br><span class="line">  <span class="keyword">type</span>(ClassStudent), <span class="keyword">pointer</span> :: new_Student2 =&gt; null()</span><br><span class="line">  <span class="keyword">type</span>(ClassStudent), <span class="keyword">pointer</span> :: new_Student3 =&gt; null()</span><br><span class="line"><span class="keyword">continue</span></span><br><span class="line">  <span class="built_in">allocate</span>(new_Student1)</span><br><span class="line">  new_Student1 = ClassStudent(<span class="number">1</span>, <span class="string">&quot;John&quot;</span>)</span><br><span class="line">  <span class="built_in">allocate</span>(new_Student2)</span><br><span class="line">  new_Student2 = ClassStudent(<span class="number">2</span>, <span class="string">&quot;Bob&quot;</span>)</span><br><span class="line">  <span class="built_in">allocate</span>(new_Student3)</span><br><span class="line">  new_Student3 = ClassStudent(<span class="number">3</span>, <span class="string">&quot;Tom&quot;</span>)</span><br><span class="line">  Students           =&gt; new_Student1</span><br><span class="line">  Students%next      =&gt; new_Student2</span><br><span class="line">  Students%next%next =&gt; new_Student3</span><br><span class="line">  <span class="built_in">write</span> (*,*) <span class="string">&quot;Deallocate new_Student1.&quot;</span></span><br><span class="line">  <span class="comment">! nullify(new_Student1)</span></span><br><span class="line">  <span class="comment">! deallocate(new_Student1)</span></span><br><span class="line">  <span class="comment">! new_Student1 =&gt; null()</span></span><br><span class="line">  <span class="built_in">write</span> (*,*) <span class="string">&quot;This is test_process.&quot;</span></span><br><span class="line">  <span class="built_in">deallocate</span>(Students)</span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> test_process</span><br></pre></td></tr></table></figure>
+<ul>
+<li>方式1: <code>nullify(new_Student1)</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">=======================================================================</span><br><span class="line"><span class="comment"># type(ClassStudent), pointer :: new_Student1 =&gt; null()</span></span><br><span class="line">(gdb) p new_student1</span><br><span class="line"><span class="variable">$1</span> = (PTR TO -&gt; ( Type classstudent )) 0x0</span><br><span class="line">(gdb) p new_student1%next</span><br><span class="line">Cannot access memory at address 0x88</span><br><span class="line">=======================================================================</span><br><span class="line"><span class="comment"># allocate(new_Student1)</span></span><br><span class="line">(gdb) p new_student1</span><br><span class="line"><span class="variable">$2</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cb90</span><br><span class="line">(gdb) p new_student1%next</span><br><span class="line"><span class="variable">$3</span> = (PTR TO -&gt; ( Type classstudent )) 0x0</span><br><span class="line">=======================================================================</span><br><span class="line"><span class="comment"># new_Student1 = ClassStudent(1, &quot;John&quot;)</span></span><br><span class="line">(gdb) p new_student1</span><br><span class="line"><span class="variable">$4</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cb90</span><br><span class="line">(gdb) p new_student1%next</span><br><span class="line"><span class="variable">$5</span> = (PTR TO -&gt; ( Type classstudent )) 0x0</span><br><span class="line">=======================================================================</span><br><span class="line"><span class="comment"># Students           =&gt; new_Student1</span></span><br><span class="line"><span class="comment"># Students%next      =&gt; new_Student2</span></span><br><span class="line"><span class="comment"># Students%next%next =&gt; new_Student3</span></span><br><span class="line">(gdb) p new_student1</span><br><span class="line"><span class="variable">$6</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cb90</span><br><span class="line">(gdb) p new_student1%next</span><br><span class="line"><span class="variable">$7</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cc90</span><br><span class="line">(gdb) p students</span><br><span class="line"><span class="variable">$8</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cb90</span><br><span class="line">(gdb) p students%next</span><br><span class="line"><span class="variable">$9</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cc90</span><br><span class="line">=======================================================================</span><br><span class="line"><span class="comment"># nullify(new_Student1)</span></span><br><span class="line">(gdb) p new_student1</span><br><span class="line"><span class="variable">$10</span> = (PTR TO -&gt; ( Type classstudent )) 0x0</span><br><span class="line">(gdb) p new_student1%next</span><br><span class="line">Cannot access memory at address 0x88</span><br><span class="line">(gdb) p students</span><br><span class="line"><span class="variable">$11</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cb90</span><br><span class="line">(gdb) p students%next</span><br><span class="line"><span class="variable">$12</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cc90</span><br><span class="line">=======================================================================</span><br></pre></td></tr></table></figure>
+<ul>
+<li>方式2: <code>deallocate(new_Student1)</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">=======================================================================</span><br><span class="line"><span class="comment"># deallocate(new_Student1)</span></span><br><span class="line">(gdb) p new_student1</span><br><span class="line"><span class="variable">$1</span> = (PTR TO -&gt; ( Type classstudent )) 0x0</span><br><span class="line">(gdb) p new_student1%next</span><br><span class="line">Cannot access memory at address 0x88</span><br><span class="line">(gdb) p new_student1%<span class="built_in">id</span></span><br><span class="line">Cannot access memory at address 0x0</span><br><span class="line">(gdb) p new_student1%name</span><br><span class="line">Cannot access memory at address 0x4</span><br><span class="line">(gdb) p students</span><br><span class="line"><span class="variable">$2</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cb90</span><br><span class="line">(gdb) p students%next</span><br><span class="line"><span class="variable">$3</span> = (PTR TO -&gt; ( Type classstudent )) 0x0</span><br><span class="line">(gdb) p students%<span class="built_in">id</span></span><br><span class="line"><span class="variable">$4</span> = 39372</span><br><span class="line">(gdb) p students%name</span><br><span class="line"><span class="variable">$5</span> = <span class="string">&#x27;PU\000\000\367XƑي\307\030&#x27;</span>, <span class="string">&#x27; &#x27;</span> &lt;repeats 116 <span class="built_in">times</span>&gt;</span><br><span class="line">=======================================================================</span><br></pre></td></tr></table></figure>
+<ul>
+<li>方式3: <code>new_Student1 =&gt; null()</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">=======================================================================</span><br><span class="line"><span class="comment"># new_Student1 =&gt; null()</span></span><br><span class="line">(gdb) p new_student1</span><br><span class="line"><span class="variable">$1</span> = (PTR TO -&gt; ( Type classstudent )) 0x0</span><br><span class="line">(gdb) p new_student1%next</span><br><span class="line">Cannot access memory at address 0x88</span><br><span class="line">(gdb) p students</span><br><span class="line"><span class="variable">$3</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cb90</span><br><span class="line">(gdb) p students%next</span><br><span class="line"><span class="variable">$4</span> = (PTR TO -&gt; ( Type classstudent )) 0x55555555cc90</span><br><span class="line">=======================================================================</span><br></pre></td></tr></table></figure>
+<h2 id="赋值操作"><a class="markdownIt-Anchor" href="#赋值操作"></a> 赋值操作</h2>
+<p>在程序中执行指针赋值操作时，可能会出现指向问题</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">!&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">subroutine</span></span> student_name(this, stu)</span><br><span class="line">  <span class="keyword">class</span>(ClassStudent), <span class="keyword">intent</span>(inout) :: this <span class="comment">! &#x27;Nick&#x27;</span></span><br><span class="line">  <span class="keyword">type</span>(ClassStudent),  <span class="keyword">pointer</span>       :: stu1 <span class="comment">! &#x27;Anne&#x27;</span></span><br><span class="line">  <span class="keyword">type</span>(ClassStudent),  <span class="keyword">pointer</span>       :: stu2 <span class="comment">! &#x27;Rock&#x27;</span></span><br><span class="line"><span class="keyword">continue</span></span><br><span class="line">  <span class="built_in">write</span> (*,*) this%<span class="keyword">name</span>, stu1%<span class="keyword">name</span>, stu2%<span class="keyword">name</span></span><br><span class="line">  stu1 = stu2</span><br><span class="line">  stu2%<span class="keyword">name</span> = <span class="string">&#x27;Bob&#x27;</span></span><br><span class="line">  <span class="built_in">write</span> (*,*) this%<span class="keyword">name</span>, stu1%<span class="keyword">name</span>, stu2%<span class="keyword">name</span></span><br><span class="line">  stu1 = this</span><br><span class="line">  stu1%<span class="keyword">name</span> = <span class="string">&#x27;Jame&#x27;</span></span><br><span class="line">  <span class="built_in">write</span> (*,*) this%<span class="keyword">name</span>, stu1%<span class="keyword">name</span>, stu2%<span class="keyword">name</span></span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> student_name</span><br></pre></td></tr></table></figure>
+<p>执行结果如下，发现赋值操作变成指向操作，因此最好不要对派生类型进行赋值操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">=======================================================================</span><br><span class="line"><span class="string">&#x27;Nick&#x27;</span> <span class="string">&#x27;Anne&#x27;</span> <span class="string">&#x27;Rock&#x27;</span></span><br><span class="line"><span class="string">&#x27;Nick&#x27;</span> <span class="string">&#x27;Rock&#x27;</span> <span class="string">&#x27;Bob&#x27;</span></span><br><span class="line"><span class="string">&#x27;Jame&#x27;</span> <span class="string">&#x27;Jame&#x27;</span> <span class="string">&#x27;Bob&#x27;</span></span><br><span class="line">=======================================================================</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<p><a target="_blank" rel="noopener" href="https://riptutorial.com/fortran/example/9001/type-constructor">RIP Tutorial-Fortran type constructor</a><br />
+<a target="_blank" rel="noopener" href="https://community.ibm.com/community/user/power/blogs/archive-user/2011/09/02/object-oriented-fortran-user-defined-constructors">IBM-Object-Oriented Fortran: User-defined constructors</a><br />
+<a target="_blank" rel="noopener" href="https://dannyvanpoucke.be/oop-fortran-tut4-en/">Tutorial OOP(III): Constructors and Destructors</a><br />
+<a target="_blank" rel="noopener" href="https://fortranwiki.org/fortran/show/Object-oriented+programming">Fortran Wiki-Object-oriented programming</a><br />
+<a target="_blank" rel="noopener" href="https://dannyvanpoucke.be/oop-fortran-tut5-en/">Tutorial OOP(IV) : Operator and Assignment Overloading</a><br />
+<a target="_blank" rel="noopener" href="https://sourceware.org/gdb/">GDB: The GNU Project Debugger</a><br />
+<a target="_blank" rel="noopener" href="https://community.intel.com/t5/Intel-Fortran-Compiler/intent-out-behavior/m-p/834181">intent(out) behavior</a><br />
+<a target="_blank" rel="noopener" href="https://stevelionel.com/drfortran/2009/03/31/doctor-fortran-in-ive-come-here-for-an-argument/">Doctor Fortran in “I’ve Come Here For An Argument”</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Fortran/" rel="tag"><i class="fa fa-tag"></i> Fortran</a>
+              <a href="/tags/OOP/" rel="tag"><i class="fa fa-tag"></i> OOP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/05/VSCode/VSCode_Fortran/" rel="prev" title="VSCode 配置 Fortran 开发环境">
+                  <i class="fa fa-angle-left"></i> VSCode 配置 Fortran 开发环境
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/10/30/CST/Fortran/Fortran-OOP-Learn/" rel="next" title="Fortran OOP 学习笔记">
+                  Fortran OOP 学习笔记 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Dewedseed</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">20k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">1:12</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Dewedseed/Dewedseed.github.io" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js","integrity":"sha256-stuqcu2FrjYCXDOytWFA5SoUE/r3nkp6gTglzNSlavU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="运用 Metis 工具分割非结构网格和结构网格用于并行计算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Metis 图分割工具">
+<meta property="og:url" content="http://example.com/2024/11/29/Mesh/Metis_Fortran/index.html">
+<meta property="og:site_name" content="Dewedseed&#39;s Blog">
+<meta property="og:description" content="运用 Metis 工具分割非结构网格和结构网格用于并行计算">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/CFD/Partition/nproc_7.png">
+<meta property="og:image" content="http://example.com/images/CFD/Partition/nproc_73.png">
+<meta property="og:image" content="http://example.com/images/CFD/Partition/nproc_16.png">
+<meta property="og:image" content="http://example.com/images/CFD/Partition/nproc_27.png">
+<meta property="article:published_time" content="2024-11-29T08:53:41.266Z">
+<meta property="article:modified_time" content="2024-12-16T12:48:17.459Z">
+<meta property="article:author" content="Dewedseed">
+<meta property="article:tag" content="metis">
+<meta property="article:tag" content="mpi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/CFD/Partition/nproc_7.png">
+
+
+<link rel="canonical" href="http://example.com/2024/11/29/Mesh/Metis_Fortran/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/11/29/Mesh/Metis_Fortran/","path":"2024/11/29/Mesh/Metis_Fortran/","title":"Metis 图分割工具"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Metis 图分割工具 | Dewedseed's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Dewedseed's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-docs"><a href="/Docs/" rel="section"><i class="fa fa-folder-open fa-fw"></i>Docs</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">28</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">29</span></a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#question"><span class="nav-number">1.</span> <span class="nav-text"> Question</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">2.</span> <span class="nav-text"> Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fill-reducing-orderings"><span class="nav-number">2.1.</span> <span class="nav-text"> fill-reducing orderings</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#algorithm"><span class="nav-number">3.</span> <span class="nav-text"> Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#graph"><span class="nav-number">3.1.</span> <span class="nav-text"> Graph</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mesh"><span class="nav-number">3.2.</span> <span class="nav-text"> Mesh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#heterogeneous"><span class="nav-number">3.3.</span> <span class="nav-text"> Heterogeneous</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data-structrue"><span class="nav-number">4.</span> <span class="nav-text"> Data Structrue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#graph-data"><span class="nav-number">4.1.</span> <span class="nav-text"> Graph Data</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#graph-file-format"><span class="nav-number">4.1.1.</span> <span class="nav-text"> Graph file format</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#csr-format"><span class="nav-number">4.1.2.</span> <span class="nav-text"> CSR Format</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mesh-data"><span class="nav-number">4.2.</span> <span class="nav-text"> Mesh Data</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mesh-file-format"><span class="nav-number">4.2.1.</span> <span class="nav-text"> Mesh file format</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mesh-data-structrue"><span class="nav-number">4.2.2.</span> <span class="nav-text"> Mesh Data Structrue</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#implementation"><span class="nav-number">5.</span> <span class="nav-text"> Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-block-structrual-mesh"><span class="nav-number">5.1.</span> <span class="nav-text"> Multi-Block Structrual Mesh</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#error-accumulation-of-if"><span class="nav-number">5.1.1.</span> <span class="nav-text"> Error Accumulation of IF</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#unstructural-mesh"><span class="nav-number">5.2.</span> <span class="nav-text"> Unstructural Mesh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#program"><span class="nav-number">5.3.</span> <span class="nav-text"> Program</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#compile"><span class="nav-number">6.</span> <span class="nav-text"> Compile</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#install"><span class="nav-number">6.1.</span> <span class="nav-text"> Install</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#compile-gklib"><span class="nav-number">6.1.1.</span> <span class="nav-text"> Compile GKlib</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#make"><span class="nav-number">6.2.</span> <span class="nav-text"> Make</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#linker-attention"><span class="nav-number">6.2.1.</span> <span class="nav-text"> Linker Attention</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text"> Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dewedseed"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Dewedseed</p>
+  <div class="site-description" itemprop="description">Colorful Fluid Display Worker</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Dewedseed" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Dewedseed" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/11/29/Mesh/Metis_Fortran/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dewedseed">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dewedseed's Blog">
+      <meta itemprop="description" content="Colorful Fluid Display Worker">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Metis 图分割工具 | Dewedseed's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Metis 图分割工具
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-11-29 16:53:41" itemprop="dateCreated datePublished" datetime="2024-11-29T16:53:41+08:00">2024-11-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-12-16 20:48:17" itemprop="dateModified" datetime="2024-12-16T20:48:17+08:00">2024-12-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CFD/" itemprop="url" rel="index"><span itemprop="name">CFD</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CFD/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>5 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>运用 Metis 工具分割非结构网格和结构网格用于并行计算</p>
+<span id="more"></span>
+<h2 id="question"><a class="markdownIt-Anchor" href="#question"></a> Question</h2>
+<ol>
+<li>Metis 和 ParMetis 的区别</li>
+<li>Graph 和 Mesh 的区别</li>
+<li>运用 Metis 划分结构网格</li>
+<li>运用 Metis 划分非结构网格</li>
+</ol>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ol>
+<li>“Metis” was a titaness in Greek mythology and presided over all wisdom and knowledge.</li>
+<li>Application
+<ul>
+<li>graph and mesh partitioning</li>
+<li>compute fill-reducing orderings of sparse matrices</li>
+<li>solving optimization problems arising in numerous areas</li>
+</ul>
+</li>
+<li>Algorithm
+<ul>
+<li>multilevel k-way partitioning</li>
+<li>multilevel recursive bisection</li>
+</ul>
+</li>
+<li>Version
+<ul>
+<li>5.x 版本相较 4.x 版本有较大变动</li>
+</ul>
+</li>
+<li>Implement
+<ul>
+<li>Stand-alone Programs + File – Graph/Mesh/Weight</li>
+<li>API – C/C++/Fortran</li>
+</ul>
+</li>
+</ol>
+<div class="note info"><h3 id="fill-reducing-orderings"><a class="markdownIt-Anchor" href="#fill-reducing-orderings"></a> fill-reducing orderings</h3>
+<p>一种稀疏矩阵排列方法，旨在减少矩阵分解过程中的 fill-in 元素</p>
+</div>
+<h2 id="algorithm"><a class="markdownIt-Anchor" href="#algorithm"></a> Algorithm</h2>
+<h3 id="graph"><a class="markdownIt-Anchor" href="#graph"></a> Graph</h3>
+<ol>
+<li>METIS 算法基于 multilevel graph partitioning paradigm</li>
+<li>multilevel paradigm 包含三个 Phase
+<ul>
+<li>graph coarsening: 图形粗化</li>
+<li>initial partitioning: 初始化分割</li>
+<li>graph uncoarsening: 图形细化</li>
+</ul>
+</li>
+<li>multilevel recursive bisection</li>
+<li>multilevel k-way partitioning
+<ul>
+<li>minimize the resulting subdomain connectivity graph</li>
+<li>enforce contiguous partitions</li>
+<li>minimize alternative objectives</li>
+</ul>
+</li>
+<li>METIS 算法通过将各点添加权重矢量从而均衡不同阶段和不同物理场中每个域的计算负载和存储资源</li>
+</ol>
+<h3 id="mesh"><a class="markdownIt-Anchor" href="#mesh"></a> Mesh</h3>
+<p>METIS 通过 <code>mpmetis</code> 程序分割有限元或有限体积网格 (Mesh)</p>
+<ol>
+<li>程序 <code>m2gmetis</code> 首先将网格转换为 Graph
+<ul>
+<li>Dual Graph:  将 Mesh Element 转换为 Graph Vertex</li>
+<li>Nodal Graph: 将 Mesh Node    转换为 Graph Vertex</li>
+</ul>
+</li>
+<li>调用 Graph partitioning API 分割 Graph</li>
+<li>还原网格</li>
+</ol>
+<p>METIS 未直接提供网格的多约束分割功能，因此需要通过 <code>m2gmetis</code> 间接实现</p>
+<h3 id="heterogeneous"><a class="markdownIt-Anchor" href="#heterogeneous"></a> Heterogeneous</h3>
+<p>异构计算</p>
+<h2 id="data-structrue"><a class="markdownIt-Anchor" href="#data-structrue"></a> Data Structrue</h2>
+<h3 id="graph-data"><a class="markdownIt-Anchor" href="#graph-data"></a> Graph Data</h3>
+<ol>
+<li>Graph</li>
+</ol>
+<pre><code class="highlight mermaid">mindmap
+  v1((1))
+     v2((2))
+     v3((3))
+     v4((5))</code></pre>
+<ol start="2">
+<li>Graph file</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">7 11 111 3             |  (n m fmt ncon)</span><br><span class="line">2 1 2 0 5 1 3 2 2 1    |  (s w1 w2 .. w_ncon v1 e1 v2 e2 .. vk ek)</span><br><span class="line">...                    |  ...</span><br><span class="line"></span><br><span class="line">n_vert, n_edge, vert_size/w_vert/w_edge, nw_vert</span><br><span class="line">vert_size, w_vert, conn_vert, w_edge</span><br></pre></td></tr></table></figure>
+<div class="note info"><h4 id="graph-file-format"><a class="markdownIt-Anchor" href="#graph-file-format"></a> Graph file format</h4>
+<ol>
+<li><code>n = 7</code> number of vertices</li>
+<li><code>m = 11</code> number of edges</li>
+<li><code>fmt = 111</code> whether set vertex sizes, vertex weights, and edge weights</li>
+<li><code>ncon = 3</code> number of vertex weights</li>
+<li><code>s = 2</code> vertex size, amount of data that needs to be sent for vertex</li>
+<li><code>w = (1 2 0)</code> weight of vertex</li>
+<li><code>v e = (5 1) (3 2) (2 1)</code> (adjacent vertex, edge weight)</li>
+</ol>
+</div>
+<ol start="3">
+<li>API Graph CSR (Compressed storage format)</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    1 --- 2 --- 3 --- 4</span><br><span class="line">    |     |     |     |</span><br><span class="line">    5 --- 6 --- 7 --- 8</span><br><span class="line"></span><br><span class="line"> index  1   2     3     4   5    ... 8</span><br><span class="line">  xadj  1   3     6     9   11   ... 19   21</span><br><span class="line">adjncy  2 5 1 3 6 2 4 7 3 8 1  6 ... 4  7</span><br></pre></td></tr></table></figure>
+<div class="note info"><h4 id="csr-format"><a class="markdownIt-Anchor" href="#csr-format"></a> CSR Format</h4>
+<ol>
+<li><code>xadj</code> index of adjacency array for each vertex</li>
+<li><code>xadj(n+1) - 1</code> is last index of adjacency array</li>
+<li><code>adjncy(2m)</code> array of adjacency vertices of each vertex</li>
+<li><code>vwgt(n*ncon)</code> weights of the vertices (same weight =&gt; NULL)</li>
+<li><code>adjwgt(2m)</code> weights of the edges (same weight =&gt; NULL)</li>
+</ol>
+</div>
+<h3 id="mesh-data"><a class="markdownIt-Anchor" href="#mesh-data"></a> Mesh Data</h3>
+<ol>
+<li>Mesh File</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">7 2          |  (ne ncon)</span><br><span class="line">3 1 1 3 4 2  |  (w1 w2 .. w_ncon n1 n2 ..)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<div class="note info"><h4 id="mesh-file-format"><a class="markdownIt-Anchor" href="#mesh-file-format"></a> Mesh file format</h4>
+<ol>
+<li><code>ne = 7</code> number of elements</li>
+<li><code>ncon = 2</code> <em>optinal</em>, number of element weights</li>
+<li><code>w = (3 1)</code> element weight</li>
+<li><code>n = (1 3 4 2)</code> element node array (unordered)</li>
+</ol>
+</div>
+<ol start="2">
+<li>API mesh format</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    1 --- 2 --- 3 --- 4</span><br><span class="line">    |  I  | II  | III |</span><br><span class="line">    5 --- 6 --- 7 --- 8</span><br><span class="line"></span><br><span class="line">index  1       2       3</span><br><span class="line"> eptr  1       5       9       13</span><br><span class="line"> eind  1 2 5 6 2 3 6 7 3 4 7 8</span><br></pre></td></tr></table></figure>
+<div class="note info"><h4 id="mesh-data-structrue"><a class="markdownIt-Anchor" href="#mesh-data-structrue"></a> Mesh Data Structrue</h4>
+<ol>
+<li><code>eptr</code> index of <code>eind</code> array for each element</li>
+<li><code>eind</code> list of element nodes (unordered)</li>
+</ol>
+</div>
+<h2 id="implementation"><a class="markdownIt-Anchor" href="#implementation"></a> Implementation</h2>
+<h3 id="multi-block-structrual-mesh"><a class="markdownIt-Anchor" href="#multi-block-structrual-mesh"></a> Multi-Block Structrual Mesh</h3>
+<ol>
+<li>Strategies: <code>top-down</code> <code>bottom-up</code></li>
+<li>Communication Cost
+<ul>
+<li>number of communication (edge cuts)</li>
+<li>volume of communication</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">less edge cuts</span><br><span class="line"></span><br><span class="line">    * -- * -- * -- * -- *</span><br><span class="line">    |    |    |    |    |</span><br><span class="line">    |    |    |    |    |</span><br><span class="line">    |    |    |    |    |</span><br><span class="line">    |    |    |    |    |</span><br><span class="line">    |    |    |    |    |</span><br><span class="line">    |    |    |    |    |</span><br><span class="line">    |    |    |    |    |</span><br><span class="line">    * -- * -- * -- * -- *</span><br><span class="line"></span><br><span class="line">small volume of communication</span><br><span class="line"></span><br><span class="line">    * ------- * ------- *</span><br><span class="line">    |         |         |</span><br><span class="line">    |         |         |</span><br><span class="line">    |         |         |</span><br><span class="line">    * ------- * ------- *</span><br><span class="line">    |         |         |</span><br><span class="line">    |         |         |</span><br><span class="line">    |         |         |</span><br><span class="line">    * ------- * ------- *</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>Group and merge Small Blocks</li>
+<li>Method
+<ul>
+<li><code>REB</code> Recursive Edge Bisection</li>
+<li><code>IF</code> Integer Factorization</li>
+</ul>
+</li>
+</ol>
+<p><code>IF</code> Partition (N = 7, 73, 16, 27)</p>
+<div class="group-picture"><div class="group-picture-row"><div class="group-picture-column"><img src="/images/CFD/Partition/nproc_7.png" alt="NPartition 7" /></div><div class="group-picture-column"><img src="/images/CFD/Partition/nproc_73.png" alt="NPartition 73" /></div></div><div class="group-picture-row"><div class="group-picture-column"><img src="/images/CFD/Partition/nproc_16.png" alt="NPartition 16" /></div><div class="group-picture-column"><img src="/images/CFD/Partition/nproc_27.png" alt="NPartition 27" /></div></div></div>
+<div class="note info"><h4 id="error-accumulation-of-if"><a class="markdownIt-Anchor" href="#error-accumulation-of-if"></a> Error Accumulation of IF</h4>
+<ol>
+<li>Block Partition</li>
+</ol>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mtext>volume of single block</mtext><mspace width="2em"/><msub><mi>V</mi><mi>s</mi></msub><mo>=</mo><mi>V</mi><mo>×</mo><mfrac><mn>1</mn><msub><mi>n</mi><mi>p</mi></msub></mfrac><mo stretchy="false">(</mo><mn>1</mn><mo>±</mo><mi>ε</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mtext>volume of other block</mtext><mspace width="2em"/><msub><mi>V</mi><mi>u</mi></msub><mo>=</mo><mfrac><mrow><mi>V</mi><mo>−</mo><msub><mi>V</mi><mi>s</mi></msub></mrow><mrow><msub><mi>n</mi><mi>p</mi></msub><mo>−</mo><mn>1</mn></mrow></mfrac><mo>=</mo><mi>V</mi><mo>×</mo><mfrac><mn>1</mn><msub><mi>n</mi><mi>p</mi></msub></mfrac><mo stretchy="false">(</mo><mn>1</mn><mo>∓</mo><mfrac><mi>ε</mi><mrow><msub><mi>n</mi><mi>p</mi></msub><mo>−</mo><mn>1</mn></mrow></mfrac><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+   &amp; \text{volume of single block} \qquad
+      V_s = V \times \frac{1}{n_p} (1 \pm \varepsilon) \\
+   &amp; \text{volume of other  block} \qquad
+      V_u = \frac{V - V_s}{n_p -1}
+          = V \times \frac{1}{n_p} (1 \mp \frac{\varepsilon}{n_p - 1}) \\
+\end{align}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:5.226em;vertical-align:-2.363em;"></span><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.863em;"><span style="top:-4.9019em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"></span></span><span style="top:-2.2694em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.363em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.863em;"><span style="top:-4.9019em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"><span class="mord"></span><span class="mord text"><span class="mord">volume of single block</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">±</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">ε</span><span class="mclose">)</span></span></span><span style="top:-2.2694em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"><span class="mord"></span><span class="mord text"><span class="mord">volume of other block</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∓</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1076em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">ε</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.363em;"><span></span></span></span></span></span></span></span><span class="tag"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.863em;"><span style="top:-4.9019em;"><span class="pstrut" style="height:3.3603em;"></span><span class="eqn-num"></span></span><span style="top:-2.2694em;"><span class="pstrut" style="height:3.3603em;"></span><span class="eqn-num"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.363em;"><span></span></span></span></span></span></span></span></span></p>
+<ol start="2">
+<li>Load Imbalance</li>
+</ol>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mtext>For single block</mtext><mspace width="2em"/><mo stretchy="false">(</mo><msub><mi>V</mi><mrow><mi>a</mi><mi>v</mi><mi>e</mi></mrow></msub><mo>−</mo><msub><mi>V</mi><mi>s</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>=</mo><msubsup><mi>V</mi><mrow><mi>a</mi><mi>v</mi><mi>e</mi></mrow><mn>2</mn></msubsup><mo>×</mo><msup><mi>ε</mi><mn>2</mn></msup></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mtext>For other block</mtext><mspace width="2em"/><mo stretchy="false">(</mo><msub><mi>V</mi><mrow><mi>a</mi><mi>v</mi><mi>e</mi></mrow></msub><mo>−</mo><msub><mi>V</mi><mi>u</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>=</mo><msubsup><mi>V</mi><mrow><mi>a</mi><mi>v</mi><mi>e</mi></mrow><mn>2</mn></msubsup><mo>×</mo><msup><mi>ε</mi><mn>2</mn></msup><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><msub><mi>n</mi><mi>p</mi></msub><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mtext>Variance</mtext><mspace width="2em"/><msup><mi>S</mi><mn>2</mn></msup><mo>=</mo><mfrac><mn>1</mn><msub><mi>n</mi><mi>p</mi></msub></mfrac><mrow><mo fence="true">(</mo><mo stretchy="false">(</mo><msub><mi>V</mi><mrow><mi>a</mi><mi>v</mi><mi>e</mi></mrow></msub><mo>−</mo><msub><mi>V</mi><mi>s</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>+</mo><mo stretchy="false">(</mo><msub><mi>n</mi><mi>p</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><msub><mi>V</mi><mrow><mi>a</mi><mi>v</mi><mi>e</mi></mrow></msub><mo>−</mo><msub><mi>V</mi><mi>u</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo fence="true">)</mo></mrow></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mtext>Deviation</mtext><mspace width="2em"/><mi>S</mi><mo>=</mo><msub><mi>V</mi><mrow><mi>a</mi><mi>v</mi><mi>e</mi></mrow></msub><mfrac><mi>ε</mi><msqrt><mrow><msub><mi>n</mi><mi>p</mi></msub><mo>−</mo><mn>1</mn></mrow></msqrt></mfrac></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mtext>Imbalance</mtext><mspace width="2em"/><mfrac><mi>S</mi><msub><mi>V</mi><mrow><mi>a</mi><mi>v</mi><mi>e</mi></mrow></msub></mfrac><mo>=</mo><mfrac><mi>ε</mi><msqrt><mrow><msub><mi>n</mi><mi>p</mi></msub><mo>−</mo><mn>1</mn></mrow></msqrt></mfrac></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+   &amp; \text{For single block} \qquad
+      (V_{ave} - V_s)^2 = V_{ave}^2 \times \varepsilon^2 \\
+   &amp; \text{For other  block} \qquad
+      (V_{ave} - V_u)^2 = V_{ave}^2 \times \varepsilon^2/(n_p-1)^2 \\
+   &amp; \text{Variance} \qquad
+      S^2 = \frac{1}{n_p} \left( (V_{ave} - V_s)^2 +
+                                 (n_p - 1) (V_{ave} - V_u)^2 \right) \\
+   &amp; \text{Deviation} \qquad
+      S = V_{ave} \frac{\varepsilon}{\sqrt{n_p - 1}} \\
+   &amp; \text{Imbalance} \qquad
+      \frac{S}{V_{ave}} = \frac{\varepsilon}{\sqrt{n_p - 1}} \\
+\end{align}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:10.9697em;vertical-align:-5.2348em;"></span><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:5.7348em;"><span style="top:-8.231em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"></span></span><span style="top:-6.7069em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"></span></span><span style="top:-4.7255em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"></span></span><span style="top:-2.3458em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"></span></span><span style="top:0.4445em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:5.2348em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:5.7348em;"><span style="top:-8.231em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"><span class="mord"></span><span class="mord text"><span class="mord">For single block</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-2.453em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">e</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">ε</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-6.7069em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"><span class="mord"></span><span class="mord text"><span class="mord">For other block</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-2.453em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">e</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">ε</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">/</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-4.7255em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"><span class="mord"></span><span class="mord text"><span class="mord">Variance</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span><span style="top:-2.3458em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"><span class="mord"></span><span class="mord text"><span class="mord">Deviation</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1076em;"><span style="top:-2.2458em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8642em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span></span></span><span style="top:-2.8242em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3758em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">ε</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.13em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:0.4445em;"><span class="pstrut" style="height:3.3603em;"></span><span class="mord"><span class="mord"></span><span class="mord text"><span class="mord">Imbalance</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">S</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1076em;"><span style="top:-2.2458em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8642em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span></span></span><span style="top:-2.8242em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3758em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">ε</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.13em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:5.2348em;"><span></span></span></span></span></span></span></span><span class="tag"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:5.7348em;"><span style="top:-8.231em;"><span class="pstrut" style="height:3.3603em;"></span><span class="eqn-num"></span></span><span style="top:-6.7069em;"><span class="pstrut" style="height:3.3603em;"></span><span class="eqn-num"></span></span><span style="top:-4.7255em;"><span class="pstrut" style="height:3.3603em;"></span><span class="eqn-num"></span></span><span style="top:-2.3458em;"><span class="pstrut" style="height:3.3603em;"></span><span class="eqn-num"></span></span><span style="top:0.4445em;"><span class="pstrut" style="height:3.3603em;"></span><span class="eqn-num"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:5.2348em;"><span></span></span></span></span></span></span></span></span></p>
+</div>
+<h3 id="unstructural-mesh"><a class="markdownIt-Anchor" href="#unstructural-mesh"></a> Unstructural Mesh</h3>
+<h3 id="program"><a class="markdownIt-Anchor" href="#program"></a> Program</h3>
+<p>Fortran 中无法直接调用 <code>metis.h</code> 文件，需要编写接口，具体可参考</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/JCSDA-internal/metis">metis | JCSDA</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/gnikit/metis-fpm">METIS for fpm | gnikit</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ivan-pi/fmetis">fmetis | ivan-pi</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/swig-fortran">Formetis | SWIG-Fortran</a></li>
+</ol>
+<h2 id="compile"><a class="markdownIt-Anchor" href="#compile"></a> Compile</h2>
+<h3 id="install"><a class="markdownIt-Anchor" href="#install"></a> Install</h3>
+<ol>
+<li>安装 Metis</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># clone src</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/KarypisLab/METIS.git</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/KarypisLab/GKlib.git</span><br><span class="line">wget https://github.com/KarypisLab/METIS/archive/refs/tags/v5.1.1-DistDGL-v0.5.tar.gz</span><br><span class="line"><span class="comment"># build GKlib (CMake 2.8, use cmake 3.28 here)</span></span><br><span class="line"><span class="built_in">cd</span> GKlib</span><br><span class="line">make config prefix=<span class="variable">$HOME</span>/local/metis/metis-5.2.1 CONFIG_FLAGS=<span class="string">&#x27;-D BUILD_SHARED_LIBS=ON -D CMAKE_INSTALL_PREFIX=&#x27;</span><span class="variable">$HOME</span><span class="string">&#x27;/local/metis/metis-5.2.1&#x27;</span></span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"><span class="comment"># build metis</span></span><br><span class="line"><span class="built_in">cd</span> METIS</span><br><span class="line">make config shared=1 cc=gcc prefix=<span class="variable">$HOME</span>/local/metis/metis-5.2.1</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<div class="note warning"><h4 id="compile-gklib"><a class="markdownIt-Anchor" href="#compile-gklib"></a> Compile GKlib</h4>
+<p><a target="_blank" rel="noopener" href="https://github.com/KarypisLab/METIS/issues/82">https://github.com/KarypisLab/METIS/issues/82</a></p>
+</div>
+<ol start="2">
+<li>添加环境</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#%Module</span></span><br><span class="line"></span><br><span class="line">proc ModulesHelp &#123;&#125; &#123;</span><br><span class="line">  puts stderr <span class="string">&quot;Program:     METIS $::version&quot;</span></span><br><span class="line">  puts stderr <span class="string">&quot;Description: Karypis -- A set of serial programs for partitioning graphs, &quot;</span></span><br><span class="line">  puts stderr <span class="string">&quot;                        partitioning finite element meshes, and producing &quot;</span></span><br><span class="line">  puts stderr <span class="string">&quot;                        fill reducing orderings for sparse matrices. &quot;</span></span><br><span class="line">  puts stderr <span class="string">&quot;Github:      https://github.com/KarypisLab/METIS&quot;</span></span><br><span class="line">  puts stderr &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span>             version     5.2.1</span><br><span class="line"><span class="built_in">set</span>             prefix      <span class="variable">$HOME</span>/local/metis/metis-<span class="variable">$version</span></span><br><span class="line"></span><br><span class="line">module-whatis <span class="string">&quot;METIS -- Graphs and mesh partition program&quot;</span></span><br><span class="line"></span><br><span class="line">setenv          METIS_HOME         <span class="variable">$prefix</span></span><br><span class="line">setenv          METIS_INCLUDE      <span class="variable">$prefix</span>/include</span><br><span class="line">setenv          METIS_LIB          <span class="variable">$prefix</span>/lib</span><br><span class="line">prepend-path    PATH               <span class="variable">$prefix</span>/bin</span><br><span class="line">prepend-path    LD_LIBRARY_PATH    <span class="variable">$prefix</span>/lib</span><br></pre></td></tr></table></figure>
+<h3 id="make"><a class="markdownIt-Anchor" href="#make"></a> Make</h3>
+<ol>
+<li>
+<p>Makefile</p>
+</li>
+<li>
+<p>CMake</p>
+</li>
+</ol>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## FindMETIS</span></span><br><span class="line"><span class="keyword">set</span>(METIS_ROOT <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/ext/METIS-<span class="number">5.2</span>.<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">find_path</span>(</span><br><span class="line">  METIS_INCLUDE_PATH</span><br><span class="line">  NAMES metis.h</span><br><span class="line">  PATHS <span class="variable">$&#123;METIS_ROOT&#125;</span>/<span class="keyword">include</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">find_library</span>(</span><br><span class="line">  METIS_LIBRARY</span><br><span class="line">  NAMES metis</span><br><span class="line">  PATHS <span class="variable">$&#123;METIS_ROOT&#125;</span>/lib</span><br><span class="line">  NO_DEFAULT_PATH</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(METIS_INCLUDE_PATH <span class="keyword">AND</span> METIS_LIBRARY)</span><br><span class="line">  <span class="keyword">set</span>(METIS_FOUND <span class="keyword">TRUE</span>)</span><br><span class="line">  <span class="keyword">set</span>(METIS_LIBRARY <span class="variable">$&#123;METIS_LIBRARY&#125;</span>)</span><br><span class="line">  <span class="keyword">set</span>(METIS_INCLUDE_PATH <span class="variable">$&#123;METIS_INCLUDE_PATH&#125;</span>)</span><br><span class="line"><span class="keyword">else</span>()</span><br><span class="line">  <span class="keyword">set</span>(METIS_FOUND <span class="keyword">FALSE</span>)</span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">## Find GKlib</span></span><br><span class="line"><span class="keyword">set</span>(GKLIB_ROOT <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/ext/METIS-<span class="number">5.2</span>.<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">find_path</span>(</span><br><span class="line">  GKLIB_INCLUDE_PATH</span><br><span class="line">  NAMES GKlib.h</span><br><span class="line">  PATHS <span class="variable">$&#123;GKLIB_ROOT&#125;</span>/<span class="keyword">include</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">find_library</span>(</span><br><span class="line">  GKLIB_LIBRARY</span><br><span class="line">  NAMES GKlib</span><br><span class="line">  PATHS <span class="variable">$&#123;GKLIB_ROOT&#125;</span>/lib</span><br><span class="line">  NO_DEFAULT_PATH</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(GKLIB_INCLUDE_PATH <span class="keyword">AND</span> GKLIB_LIBRARY)</span><br><span class="line">  <span class="keyword">set</span>(GKLIB_FOUND <span class="keyword">TRUE</span>)</span><br><span class="line">  <span class="keyword">set</span>(GKLIB_LIBRARY <span class="variable">$&#123;GKLIB_LIBRARY&#125;</span>)</span><br><span class="line">  <span class="keyword">set</span>(GKLIB_INCLUDE_PATH <span class="variable">$&#123;GKLIB_INCLUDE_PATH&#125;</span>)</span><br><span class="line"><span class="keyword">else</span>()</span><br><span class="line">  <span class="keyword">set</span>(GKLIB_FOUND <span class="keyword">FALSE</span>)</span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">## find package</span></span><br><span class="line"><span class="keyword">find_package</span>(GKLIB REQUIRED)</span><br><span class="line"><span class="keyword">if</span>(GKLIB_FOUND)</span><br><span class="line">    <span class="keyword">include_directories</span>(<span class="variable">$&#123;GKLIB_INCLUDE_PATH&#125;</span>)</span><br><span class="line">    <span class="keyword">message</span>(STATUS <span class="string">&quot;GKLIB library: $&#123;GKLIB_LIBRARY&#125;&quot;</span>)</span><br><span class="line">    <span class="keyword">message</span>(STATUS <span class="string">&quot;GKLIB include: $&#123;GKLIB_INCLUDE_PATH&#125;&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>()</span><br><span class="line">    <span class="keyword">message</span>(FATAL_ERROR <span class="string">&quot;GKLib library not found&quot;</span>)</span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"><span class="keyword">find_package</span>(METIS REQUIRED)</span><br><span class="line"><span class="keyword">if</span>(METIS_FOUND)</span><br><span class="line">    <span class="keyword">include_directories</span>(<span class="variable">$&#123;METIS_INCLUDE_PATH&#125;</span>)</span><br><span class="line">    <span class="keyword">message</span>(STATUS <span class="string">&quot;METIS library: $&#123;METIS_LIBRARY&#125;&quot;</span>)</span><br><span class="line">    <span class="keyword">message</span>(STATUS <span class="string">&quot;METIS include: $&#123;METIS_INCLUDE_PATH&#125;&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>()</span><br><span class="line">    <span class="keyword">message</span>(FATAL_ERROR <span class="string">&quot;METIS library not found&quot;</span>)</span><br><span class="line"><span class="keyword">endif</span>()</span><br></pre></td></tr></table></figure>
+<div class="note danger"><h4 id="linker-attention"><a class="markdownIt-Anchor" href="#linker-attention"></a> Linker Attention</h4>
+<p>注意 Cmake 中必须按照 METIS-GKLIB 顺序链接</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_link_libraries</span>(<span class="variable">$&#123;EXEC&#125;</span> <span class="variable">$&#123;METIS_LIBRARY&#125;</span> <span class="variable">$&#123;GKLIB_LIBRARY&#125;</span>)</span><br></pre></td></tr></table></figure></div>
+<h2 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/KarypisLab/METIS">METIS | KarypisLab GitHub</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/KarypisLab/METIS/blob/master/manual/manual.pdf">METIS Manual</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/KarypisLab/ParMETIS">ParMETIS | KarypisLab GitHub</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/225724970">图划分软件Metis的使用</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.pingcode.com/ask/ask-ask/201565.html">METIS类似算法和改进的有哪些</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/metis/" rel="tag"><i class="fa fa-tag"></i> metis</a>
+              <a href="/tags/mpi/" rel="tag"><i class="fa fa-tag"></i> mpi</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/27/MP/mpi-fortran/" rel="prev" title="Fortran MPI 并行编程">
+                  <i class="fa fa-angle-left"></i> Fortran MPI 并行编程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/12/02/Mesh/Metis_Example/" rel="next" title="Metis 图分割示例">
+                  Metis 图分割示例 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Dewedseed</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">20k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">1:12</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Dewedseed/Dewedseed.github.io" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js","integrity":"sha256-stuqcu2FrjYCXDOytWFA5SoUE/r3nkp6gTglzNSlavU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="katex" type="application/json">{"copy_tex_js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/copy-tex.min.js","integrity":"sha256-Us54+rSGDSTvIhKKUs4kygE2ipA0RXpWWh0/zLqw3bs="}}</script>
+  <script src="/js/third-party/math/katex.js"></script>
+
+
+
+</body>
+</html>

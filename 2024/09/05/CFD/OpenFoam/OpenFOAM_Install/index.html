@@ -21,17 +21,18 @@
 
     <meta name="description" content="各版本 OpenFOAM 及 Paraview 安装">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OpenFOAM 安装">
+<meta property="og:title" content="OpenFOAM 及 Paraview安装">
 <meta property="og:url" content="http://example.com/2024/09/05/CFD/OpenFoam/OpenFOAM_Install/index.html">
 <meta property="og:site_name" content="Dewedseed&#39;s Blog">
 <meta property="og:description" content="各版本 OpenFOAM 及 Paraview 安装">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-09-05T08:24:28.762Z">
-<meta property="article:modified_time" content="2024-09-05T08:27:02.604Z">
+<meta property="article:modified_time" content="2024-11-10T09:16:14.812Z">
 <meta property="article:author" content="Dewedseed">
 <meta property="article:tag" content="OpenFOAM">
 <meta property="article:tag" content="Install">
 <meta property="article:tag" content="Paraview">
+<meta property="article:tag" content="CFD">
 <meta name="twitter:card" content="summary">
 
 
@@ -39,10 +40,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/09/05/CFD/OpenFoam/OpenFOAM_Install/","path":"2024/09/05/CFD/OpenFoam/OpenFOAM_Install/","title":"OpenFOAM 安装"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/09/05/CFD/OpenFoam/OpenFOAM_Install/","path":"2024/09/05/CFD/OpenFoam/OpenFOAM_Install/","title":"OpenFOAM 及 Paraview安装"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>OpenFOAM 安装 | Dewedseed's Blog</title>
+<title>OpenFOAM 及 Paraview安装 | Dewedseed's Blog</title>
   
 
 
@@ -90,7 +91,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-docs"><a href="/Docs/" rel="section"><i class="fa fa-folder-open fa-fw"></i>Docs</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">14</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">8</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">18</span></a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-docs"><a href="/Docs/" rel="section"><i class="fa fa-folder-open fa-fw"></i>Docs</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">28</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">29</span></a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -141,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">1.</span> <span class="nav-text"> 下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#openfoam%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text"> OpenFOAM安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parafoam%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text"> ParaFOAM安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text"> 参考</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#openfoam"><span class="nav-number">1.</span> <span class="nav-text"> OpenFOAM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#openfoam-switch-version"><span class="nav-number">2.</span> <span class="nav-text"> OpenFOAM switch version</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#paraview"><span class="nav-number">3.</span> <span class="nav-text"> Paraview</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#parafoam"><span class="nav-number">3.1.</span> <span class="nav-text"> ParaFOAM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#original"><span class="nav-number">3.2.</span> <span class="nav-text"> Original</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text"> 参考</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -156,18 +157,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -212,12 +213,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="OpenFOAM 安装 | Dewedseed's Blog">
+      <meta itemprop="name" content="OpenFOAM 及 Paraview安装 | Dewedseed's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          OpenFOAM 安装
+          OpenFOAM 及 Paraview安装
         </h1>
 
         <div class="post-meta-container">
@@ -227,9 +228,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2024-09-05 16:24:28 / Modified: 16:27:02" itemprop="dateCreated datePublished" datetime="2024-09-05T16:24:28+08:00">2024-09-05</time>
+      <time title="Created: 2024-09-05 16:24:28" itemprop="dateCreated datePublished" datetime="2024-09-05T16:24:28+08:00">2024-09-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-11-10 17:16:14" itemprop="dateModified" datetime="2024-11-10T17:16:14+08:00">2024-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -252,14 +259,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Word count in article: </span>
-      <span>42</span>
+      <span>1.2k</span>
     </span>
     <span class="post-meta-item" title="Reading time">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">Reading time &asymp;</span>
-      <span>1 mins.</span>
+      <span>4 mins.</span>
     </span>
 </div>
 
@@ -271,14 +278,68 @@
     
     <div class="post-body" itemprop="articleBody"><p>各版本 OpenFOAM 及 Paraview 安装</p>
 <span id="more"></span>
-<h2 id="下载"><a class="markdownIt-Anchor" href="#下载"></a> 下载</h2>
-<h2 id="openfoam安装"><a class="markdownIt-Anchor" href="#openfoam安装"></a> OpenFOAM安装</h2>
-<h2 id="parafoam安装"><a class="markdownIt-Anchor" href="#parafoam安装"></a> ParaFOAM安装</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-- Could NOT find Qt5Svg (missing: Qt5Svg_DIR)</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install libqt5svg5-dev</span><br></pre></td></tr></table></figure>
+<h2 id="openfoam"><a class="markdownIt-Anchor" href="#openfoam"></a> OpenFOAM</h2>
+<p>OpenFOAM 包含两个大版本 (<a target="_blank" rel="noopener" href="https://www.topcfd.cn/18754/">https://www.topcfd.cn/18754/</a>)</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.openfoam.com/">com 版本</a></li>
+<li><a target="_blank" rel="noopener" href="https://openfoam.org">org 版本</a></li>
+</ul>
+<p>此处选择最新org OpenFOAM-V12版本，其余版本安装过程类似；安装也包含两种方法，第一种是通过包管理器 (<a target="_blank" rel="noopener" href="https://openfoam.org/download/12-ubuntu">https://openfoam.org/download/12-ubuntu</a>) 安装，另一种是基于源码安装  (<a target="_blank" rel="noopener" href="https://openfoam.org/download/source">https://openfoam.org/download/source</a>)，此处选择后者</p>
+<ol>
+<li>安装依赖包 (<a target="_blank" rel="noopener" href="https://openfoam.org/download/source/software-for-compilation/">https://openfoam.org/download/source/software-for-compilation/</a>)</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="comment"># installs the packages for repositories and compilation</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get install build-essential cmake git ca-certificates flex</span><br><span class="line"><span class="comment"># openfoam-nopv-deps:</span></span><br><span class="line"><span class="comment">#     build-essential libopenmpi-dev zlib1g-dev gnuplot gnuplot-x11</span></span><br><span class="line"><span class="comment">#     libxt-dev cmake flex</span></span><br><span class="line"><span class="comment"># openfoam-deps:</span></span><br><span class="line"><span class="comment">#     libxml2-dev libhdf5-dev libavfilter-dev libtheora-dev libgl2ps-dev</span></span><br><span class="line"><span class="comment">#     libx11-dev libqt5x11extras5-dev libglew-dev libutfcpp-dev</span></span><br><span class="line"><span class="comment">#     libdouble-conversion-dev libfreetype-dev libqt5svg5-dev</span></span><br><span class="line"><span class="comment">#     qtxmlpatterns5-dev-tools qttools5-dev python3-dev</span></span><br><span class="line"><span class="comment">#     libpdal-dev # Ubuntu 22.04 and 20.04 only</span></span><br><span class="line"><span class="comment">#     libadios2-serial-c-dev libadios2-serial-c++11-dev # Ubuntu 24.04 only</span></span><br><span class="line"><span class="comment"># add pubilc key and repository to the apt system</span></span><br><span class="line"><span class="built_in">sudo</span> sh -c <span class="string">&quot;wget -O - https://dl.openfoam.org/gpg.key &gt; /etc/apt/trusted.gpg.d/openfoam.asc&quot;</span></span><br><span class="line"><span class="built_in">sudo</span> add-apt-repository http://dl.openfoam.org/ubuntu</span><br><span class="line"><span class="comment"># get meta packages =&gt; !! VPN !!</span></span><br><span class="line"><span class="built_in">sudo</span> apt install openfoam-deps      <span class="comment"># opefoam &amp; paraview (~800MB)</span></span><br><span class="line"><span class="built_in">sudo</span> apt install openfoam-nopv-deps <span class="comment"># openfoam only</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>下载源码 (<a target="_blank" rel="noopener" href="https://openfoam.org/download/source/downloading-source-code/">https://openfoam.org/download/source/downloading-source-code/</a>)</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/OpenFOAM/OpenFOAM-12.git</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/OpenFOAM/ThirdParty-12.git</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>设置环境变量 (<a target="_blank" rel="noopener" href="https://openfoam.org/download/source/setting-environment/">https://openfoam.org/download/source/setting-environment/</a>)</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># OpenFOAM环境变量包含在 OpenFOAM-dev/etc 路径下</span></span><br><span class="line"><span class="comment"># 为编译 OpenFOAM 用户必须 source 这些环境变量</span></span><br><span class="line"><span class="comment"># 可将命令添加至 $HOME/.bashrc 文件夹中</span></span><br><span class="line"><span class="built_in">source</span> <span class="variable">$HOME</span>/OpenFOAM/OpenFOAM-12/etc/bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$WM_PROJECT_DIR</span></span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>编译第三方软件 (<a target="_blank" rel="noopener" href="https://openfoam.org/download/source/third-party-software/">https://openfoam.org/download/source/third-party-software/</a>)</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第三方库包括</span></span><br><span class="line"><span class="comment">#     Scotch, PT-Scotch, Zoltan，用于并行计算的域分解和重分布</span></span><br><span class="line"><span class="comment">#     OpenMPI 并行计算</span></span><br><span class="line"><span class="comment">#     Paraview 可视化后处理</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># !!! 默认情况下第三方库会自动随 OpenFOAM 编译 !!!</span></span><br><span class="line"><span class="comment"># 查看编译命令</span></span><br><span class="line"><span class="built_in">sudo</span> vim <span class="variable">$HOME</span>/OpenFOAM/OpenFOAM-12/Allwmake</span><br><span class="line"><span class="comment"># 第三方库编译命令如下:</span></span><br><span class="line"><span class="comment">#   Compile ThirdParty libraries and applications</span></span><br><span class="line"><span class="comment">#   if [ -d &quot;$WM_THIRD_PARTY_DIR&quot; ]</span></span><br><span class="line"><span class="comment">#   then</span></span><br><span class="line"><span class="comment">#       $WM_THIRD_PARTY_DIR/Allwmake</span></span><br><span class="line"><span class="comment">#   else</span></span><br><span class="line"><span class="comment">#       echo &quot;Allwmake: no ThirdParty directory found - skipping&quot;</span></span><br><span class="line"><span class="comment">#   fi</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 修改环境变量</span></span><br><span class="line">vim <span class="variable">$HOME</span>/OpenFOAM/OpenFOAM-12/etc/bashrc</span><br><span class="line"><span class="comment"># WM_MPLIB 默认为系统安装的 OpenMPI,这里改为第三方库以更好管理 (v2.1.1)</span></span><br><span class="line"><span class="comment">#- MPI implementation:</span></span><br><span class="line"><span class="comment">#    WM_MPLIB = SYSTEMOPENMPI | OPENMPI | SYSTEMMPI | MPICH | MPICH-GM | HPMPI</span></span><br><span class="line"><span class="comment">#               | MPI | FJMPI | QSMPI | SGIMPI | INTELMPI</span></span><br><span class="line"><span class="comment">#  export WM_MPLIB=SYSTEMOPENMPI</span></span><br><span class="line"><span class="built_in">export</span> WM_MPLIB=OPENMPI</span><br><span class="line"><span class="comment"># 修改后重新加载环境变量</span></span><br><span class="line"><span class="built_in">source</span> <span class="variable">$HOME</span>/OpenFOAM/OpenFOAM-12/etc/bashrc</span><br><span class="line"><span class="comment"># 下载 openmpi-2.1.1</span></span><br><span class="line">wget -P <span class="variable">$HOME</span>/OpenFOAM/ThirdParty-12 https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.1.tar.gz</span><br><span class="line">tar -xvf <span class="variable">$HOME</span>/OpenFOAM/ThirdParty-12/openmpi-2.1.1.tar.gz</span><br><span class="line"><span class="built_in">rm</span> -f <span class="variable">$HOME</span>/OpenFOAM/ThirdParty-12/openmpi-2.1.1.tar.gz</span><br><span class="line"><span class="comment"># !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span></span><br><span class="line"><span class="comment"># !!!            ParaView 需单独安装            !!!</span></span><br><span class="line"><span class="comment"># !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span></span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>编译 OpenFOAM (<a target="_blank" rel="noopener" href="https://openfoam.org/download/source/compiling-openfoam/">https://openfoam.org/download/source/compiling-openfoam/</a>)</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 Allwmake 脚本编译</span></span><br><span class="line"><span class="comment">#    -j &lt;n&gt;  并行编译</span></span><br><span class="line"><span class="comment">#    -q      同时编译多个库和可执行程序，难以定位问题</span></span><br><span class="line">./Allwmake -j</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>安装 PVReaders</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$FOAM_UTILITIES</span>/postProcessing/graphics/PVReaders</span><br><span class="line">./Allwclean &amp;&amp; ./Allwmake</span><br><span class="line"><span class="comment"># 查看 paraFoam</span></span><br><span class="line"><span class="built_in">which</span> paraFoam</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>更新 (<a target="_blank" rel="noopener" href="https://openfoam.org/download/source/compiling-openfoam/">https://openfoam.org/download/source/compiling-openfoam/</a>)</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pull 源码</span></span><br><span class="line">git pull</span><br><span class="line"><span class="comment"># 编译</span></span><br><span class="line">./Allwmake -update -j &lt;n&gt;</span><br><span class="line"><span class="comment"># 更新出现问题可先清除之前编译内容然后重新编译</span></span><br><span class="line">wcleanPlatform</span><br></pre></td></tr></table></figure>
+<h2 id="openfoam-switch-version"><a class="markdownIt-Anchor" href="#openfoam-switch-version"></a> OpenFOAM switch version</h2>
+<p>OpenFOAM-org 最近几个版本变化较大，特别是 V11 版本引入了基于类的模块化求解器，因此有多版本共存的需求</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">%Module</span></span><br><span class="line"></span><br><span class="line">proc ModulesHelp &#123;&#125; &#123;</span><br><span class="line">  puts stderr &quot;Program:     OpenFoam-v$::version&quot;</span><br><span class="line">  puts stderr &quot;Description: Open Source Field Operation and Manipulation (OpenFOAM) C++ libraries.&quot;</span><br><span class="line">  puts stderr &quot;Home Page:   https://openfoam.org/&quot;</span><br><span class="line">  puts stderr &quot;User Guide:  https://doc.cfd.direct/openfoam/user-guide-v12/index&quot;</span><br><span class="line">  puts stderr &quot;Github:      https://github.com/OpenFOAM/OpenFOAM-12&quot;</span><br><span class="line">  puts stderr &quot;Licence:     https://openfoam.org/licence&quot;</span><br><span class="line">  puts stderr &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">set             version     12</span><br><span class="line">set             prefix      /home/user/OpenFOAM</span><br><span class="line"></span><br><span class="line">module-whatis &quot;OpenFOAM-v$version&quot;</span><br><span class="line"></span><br><span class="line">conflict        OpenFOAM</span><br><span class="line"></span><br><span class="line">source-sh   bash      $prefix/OpenFOAM-$version/etc/bashrc</span><br></pre></td></tr></table></figure>
+<h2 id="paraview"><a class="markdownIt-Anchor" href="#paraview"></a> Paraview</h2>
+<h3 id="parafoam"><a class="markdownIt-Anchor" href="#parafoam"></a> ParaFOAM</h3>
+<p>OpenFOAM ParaView 安装 (<a target="_blank" rel="noopener" href="https://openfoam.org/download/source/third-party-software/">https://openfoam.org/download/source/third-party-software/</a>)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第三方库 Paraview 需单独安装</span></span><br><span class="line"><span class="comment"># 查看 Paraview 相关环境变量</span></span><br><span class="line"><span class="built_in">env</span> | grep Para</span><br><span class="line"><span class="comment"># 打开 OpenFOAM 环境变量文件</span></span><br><span class="line">vim <span class="variable">$HOME</span>/OpenFOAM/etc/bashrc</span><br><span class="line"><span class="comment"># ParaView_TYPE 默认为系统安装的 ParaView,这里改为第三方库以更好管理 (v5.11.2)</span></span><br><span class="line"><span class="comment"># ParaView_TYPE = none | system | paraviewopenfoam | ThirdParty (OpenFOAM)</span></span><br><span class="line"><span class="built_in">export</span> ParaView_TYPE=ThirdParty</span><br><span class="line"><span class="built_in">source</span> <span class="variable">$HOME</span>/OpenFOAM/OpenFOAM-12/etc/bashrc</span><br><span class="line"><span class="comment"># 安装 ParaView</span></span><br><span class="line">./makeParaView -version 5.11.2</span><br><span class="line"><span class="comment"># 刷新环境变量</span></span><br><span class="line">wmRefresh</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1PRv8e3E1G?spm_id_from=333.788.recommend_more_video.-1&amp;vd_source=21c5829642d727a3758401baa3c970e1">BiliBili-paraView环境变量变动，连续翻车，终于搞定OpenFOAM-12 | 法式滚筒YEBOSS</a><br />
+<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1cN4y197jx/?spm_id_from=333.999.0.0&amp;vd_source=21c5829642d727a3758401baa3c970e1">BiliBili-openFOAM小随笔6：如何实现任意版本的paraView安装 | 法式滚筒YEBOSS</a></p>
+<h3 id="original"><a class="markdownIt-Anchor" href="#original"></a> Original</h3>
+<p>Paraview Documents (<a target="_blank" rel="noopener" href="https://docs.paraview.org/en/latest/UsersGuide/index.html">https://docs.paraview.org/en/latest/UsersGuide/index.html</a>)<br />
+Paraview Wiki (<a target="_blank" rel="noopener" href="https://www.paraview.org/Wiki/ParaView">https://www.paraview.org/Wiki/ParaView</a>)</p>
+<p>可通过以下方式安装</p>
+<ul>
+<li>命令行安装 <code>sudo apt install paraview</code></li>
+<li>下载二进制包安装 <a target="_blank" rel="noopener" href="https://www.paraview.org/download/">Download ParaView</a></li>
+<li>下载源码包安装 <a target="_blank" rel="noopener" href="https://github.com/Kitware/ParaView">Paraview Github</a></li>
+</ul>
+<p>添加 Paraview</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">%Module</span></span><br><span class="line"></span><br><span class="line">proc ModulesHelp &#123;&#125; &#123;</span><br><span class="line">  puts stderr &quot;Program:     paraview $::version&quot;</span><br><span class="line">  puts stderr &quot;Description: Open-source, multi-platform visualization application.&quot;</span><br><span class="line">  puts stderr &quot;Home Page:   https://www.paraview.org/Wiki/ParaView&quot;</span><br><span class="line">  puts stderr &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">set             version     5.13.1</span><br><span class="line">set             prefix      /home/user/snap/paraview</span><br><span class="line"></span><br><span class="line">module-whatis &quot;ParaView is an open-source, multi-platform application designed to visualize data sets of va    rying sizes from small to very large. &quot;</span><br><span class="line"></span><br><span class="line">setenv          FPM_HOME        $prefix/ParaView-$version</span><br><span class="line">prepend-path    PATH            $prefix/ParaView-$version/bin</span><br></pre></td></tr></table></figure>
+<p>由于 paraview 依赖于 <a target="_blank" rel="noopener" href="https://docs.paraview.org/en/latest/UsersGuide/introduction.html#getting-the-software">xcb, x11, glu, xrender, xi, xkbcommon, xkbcommon-x11</a>, 初次使用可能报错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.</span><br><span class="line">qt.qpa.plugin: Could not load the Qt platform plugin <span class="string">&quot;xcb&quot;</span> <span class="keyword">in</span> <span class="string">&quot;&quot;</span> even though it was found.</span><br><span class="line">This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.</span><br><span class="line"></span><br><span class="line">Available platform plugins are: xcb.</span><br><span class="line"></span><br><span class="line">error: exception occurred: Subprocess aborted</span><br></pre></td></tr></table></figure>
+<p>安装 <code>QT</code> 即可 (<a target="_blank" rel="noopener" href="https://web.stanford.edu/dept/cs_edu/resources/qt/install-linux#2-download-and-run-the-qt-installer">https://web.stanford.edu/dept/cs_edu/resources/qt/install-linux#2-download-and-run-the-qt-installer</a>)</p>
 <h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/396064262">https://zhuanlan.zhihu.com/p/396064262</a><br />
-<a target="_blank" rel="noopener" href="https://blog.csdn.net/muxuen/article/details/135298656">https://blog.csdn.net/muxuen/article/details/135298656</a></p>
+<p><a target="_blank" rel="noopener" href="http://dyfluid.com/install.html">东岳流体-OpenFOAM安装</a><br />
+<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/396064262">OpenFOAM学习杂记-OpenFOAM v1912以及paraview安装问题</a><br />
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43744423/article/details/128828369">Paraview安装两种方法（ubuntu系统下）</a></p>
 
     </div>
 
@@ -291,6 +352,7 @@
               <a href="/tags/OpenFOAM/" rel="tag"><i class="fa fa-tag"></i> OpenFOAM</a>
               <a href="/tags/Install/" rel="tag"><i class="fa fa-tag"></i> Install</a>
               <a href="/tags/Paraview/" rel="tag"><i class="fa fa-tag"></i> Paraview</a>
+              <a href="/tags/CFD/" rel="tag"><i class="fa fa-tag"></i> CFD</a>
           </div>
 
         
@@ -335,13 +397,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="Word count total">7k</span>
+    <span title="Word count total">20k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">26 mins.</span>
+    <span title="Reading time total">1:12</span>
   </span>
 </div>
 
